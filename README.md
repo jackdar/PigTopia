@@ -1,4 +1,4 @@
-![PigTopia Graphic](https://github.com/jackdar/PigTopia/blob/main/.git_assets/pigtopia_graphic.jpg?raw=true)
+![PigTopia Graphic](https://github.com/jackdar/PigTopia/blob/development/.git_assets/pigtopia_graphic_under_construction.jpg?raw=true)
 
 # An Evolutionary Pig Simulator 🐖
 
