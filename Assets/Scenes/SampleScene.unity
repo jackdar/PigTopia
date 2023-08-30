@@ -774,6 +774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Food: []
+  pos: {x: 0, y: 0}
 --- !u!1 &1494211776
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,7 +804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c560479937840284894d5341dce63078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Food: {fileID: 4963304936973075941, guid: 6fcdb4aec19dad1469388a16ab3761e2, type: 3}
+  Food: {fileID: 609140842059881002, guid: 6fcdb4aec19dad1469388a16ab3761e2, type: 3}
   Player: []
   Create_Food: []
   Max_Food: 50

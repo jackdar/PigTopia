@@ -55,7 +55,7 @@ public class Eat : MonoBehaviour
                 PlayerEat();
 
                 // destroy
-                FoodSpawner.ins.RemoveFood(m.gameObject);
+                fs.RemoveFood(m.gameObject);
                 Destroy(m.gameObject);
             }
         }

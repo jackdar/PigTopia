@@ -32,20 +32,12 @@ public class FoodSpawner : MonoBehaviour
     public IEnumerator CreateFood()
     {
         yield return new WaitForSecondsRealtime(Time_To_Instantiate);
-        if (Create_Food.Count < Max_Food)
+        if (Create_Food.Count <= Max_Food)
         {
             Vector2 Position = new Vector2(Random.Range(-pos.x, pos.x), Random.Range(-pos.y, pos.y));
             Position /= 2;
             GameObject m =  Instantiate(Food, Position, Quaternion.identity);
             AddFood(m);
-            for(int i = 0; i < Player.Count; i++)
-            {
-                Eat e = Player[i].GetComponent<Eat>();
-                if (e != null)
-                {
-                    e.AddFood(m);
-                }
-            }
         }
         StartCoroutine(CreateFood());
     }
@@ -57,8 +49,11 @@ public class FoodSpawner : MonoBehaviour
             Create_Food.Add(m);
             for (int i = 0; i < Player.Count; i++)
             {
-                Eat pp = Player[i].GetComponent<Eat>();
-                pp.AddFood(m);
+                Eat e = Player[i].GetComponent<Eat>();
+                if (e != null)
+                {
+                    e.AddFood(m);
+                }
             }
         }
     }
@@ -70,16 +65,17 @@ public class FoodSpawner : MonoBehaviour
             Create_Food.Remove(m);
             for (int i = 0; i < Player.Count; i++)
             {
-                Eat pp = Player[i].GetComponent<Eat>();
-                pp.RemoveFood(m);
+                Eat e = Player[i].GetComponent<Eat>();
+                if (e != null)
+                {
+                    e.RemoveFood(m);
+                }
             }
         }
     }
-
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.white;
         Gizmos.DrawWireCube(transform.position, pos);
     }
 }
-
