@@ -5,6 +5,8 @@ using UnityEngine;
 public class ItemPickup : MonoBehaviour
 {
     private GameObject Player;
+    public float pickupRange;
+    public float flightSpeed;
 
     void Start()
     {
@@ -15,9 +17,9 @@ public class ItemPickup : MonoBehaviour
     {
         float distance = Vector3.Distance(transform.position, Player.transform.position);
         
-        if (distance < 10.0f)
+        if (distance < pickupRange)
         {
-            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, 1.0f * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, flightSpeed * Time.deltaTime);
         }
     }
 
@@ -30,5 +32,7 @@ public class ItemPickup : MonoBehaviour
             inventory.ItemAmount = inventory.ItemAmount + 1;
             print("Player inventory has " + inventory.ItemAmount + " items in it!");
         }
+
+        Destroy(gameObject);
     }
 }

@@ -919,7 +919,7 @@ GameObject:
   - component: {fileID: 1837987124}
   - component: {fileID: 1837987121}
   m_Layer: 0
-  m_Name: Circle
+  m_Name: Item1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -937,6 +937,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31c7a5ada683abc4db0f4272cc9fcaf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverSpeed: 4
+  hoverRange: 4
 --- !u!212 &1837987122
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -998,8 +1000,8 @@ Transform:
   m_GameObject: {fileID: 1837987120}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.25, y: 0.686897, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 3.68, y: 2.98, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1016,6 +1018,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e02c6d9c4e6ab1246a9fb03eff3779c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupRange: 2
+  flightSpeed: 4
 --- !u!61 &1837987125
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1060,7 +1064,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0.5
+  m_EdgeRadius: 0
 --- !u!1 &1894854963
 GameObject:
   m_ObjectHideFlags: 0
