@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Hover : MonoBehaviour
 {
-    public float hoverSpeed;
-    public float hoverRange;
+    [SerializeField] private float hoverSpeed;
+    [SerializeField] private float hoverRange;
 
     void Update()
     {
