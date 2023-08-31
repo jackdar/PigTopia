@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1010796279078024425}
   - component: {fileID: 5450567435669979749}
+  - component: {fileID: 7887146450199339483}
   m_Layer: 0
   m_Name: meatonchips
   m_TagString: Food
@@ -84,3 +85,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7887146450199339483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609140842059881002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e02c6d9c4e6ab1246a9fb03eff3779c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupRange: 2
+  flightSpeed: 4
