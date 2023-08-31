@@ -5,12 +5,15 @@ using UnityEngine;
 public class Pickup : MonoBehaviour
 {
     private GameObject Player;
+    private FoodSpawner foodSpawner;
+    public float grow = 0.05f;
     public float pickupRange;
     public float flightSpeed;
 
     void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
+        foodSpawner = FoodSpawner.ins;
     }
 
     void Update()
@@ -34,6 +37,10 @@ public class Pickup : MonoBehaviour
                 {
                     stomach.FoodAmount = stomach.FoodAmount + 1;
                     print("Player has eaten food!");
+                    Destroy(gameObject);
+                    foodSpawner.CreateFood();
+                    Vector3 newScale = Player.transform.localScale + new Vector3(grow, grow, grow);
+                    Player.transform.localScale = newScale;
                 }
             }
 

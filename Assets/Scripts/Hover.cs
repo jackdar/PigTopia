@@ -6,7 +6,13 @@ public class Hover : MonoBehaviour
 {
     [SerializeField] private float hoverSpeed;
     [SerializeField] private float hoverRange;
+    private Vector3 initialPosition;
 
+    void Start()
+    {
+        initialPosition = transform.position;
+    }
+    
     void Update()
     {
         Vector3 p = transform.position;

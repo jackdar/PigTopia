@@ -39,7 +39,7 @@ public class FoodSpawner : MonoBehaviour
                 GameObject m = Instantiate(Food, Position, Quaternion.identity);
                 AddFood(m);
             }
-            yield return new WaitForSeconds(Time_To_Instantiate);
+            yield return null;
         }
     }
 
@@ -59,9 +59,4 @@ public class FoodSpawner : MonoBehaviour
         }
     }
 
-    public void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(transform.position, pos);
-    }
 }
