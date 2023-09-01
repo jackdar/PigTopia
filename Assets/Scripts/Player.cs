@@ -7,11 +7,13 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private GameInput gameInput;
     [SerializeField] private SpriteRenderer playerSprite;
-
+    [SerializeField] private Rigidbody2D rb;
+    
     private float moveSpeed = 4.0f;
     private bool isFacingLeft = true;
     private bool isFacingRight;
     private bool isWalking;
+
 
     private void Update()
     {
@@ -27,12 +29,10 @@ public class Player : MonoBehaviour
     private void HandleMovement()
     {
         Vector2 inputVector = gameInput.GetMovementVectorNoramlized();
-        Vector3 moveDir = new Vector3(inputVector.x, inputVector.y, 0f);
+        Vector2 movement = inputVector * moveSpeed;
 
-        float moveDistance = moveSpeed * Time.deltaTime;
-
-        transform.position += moveDir * moveDistance;
-        isWalking = moveDir != Vector3.zero;
+        rb.velocity = new Vector2(movement.x, movement.y);
+        isWalking = movement != Vector2.zero;
     }
 
     private void HandleFlip()
