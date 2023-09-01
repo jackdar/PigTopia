@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: Basic Grass Biom things 1_42
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 277139203, guid: f63a5a15a735749faad6fb3d2600132b, type: 3}
+  m_Sprite: {fileID: 363754474, guid: f63a5a15a735749faad6fb3d2600132b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
