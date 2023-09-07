@@ -837,6 +837,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameInput: {fileID: 1894854964}
   playerSprite: {fileID: 371561757}
+  rb: {fileID: 1379363386}
 --- !u!1 &1761666073
 GameObject:
   m_ObjectHideFlags: 0
