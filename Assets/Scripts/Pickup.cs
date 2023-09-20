@@ -6,9 +6,9 @@ public class Pickup : MonoBehaviour
 {
     private GameObject Player;
     private FoodSpawner foodSpawner;
-    public float grow = 0.05f;
-    public float pickupRange;
-    public float flightSpeed;
+    [SerializeField] private float grow;
+    [SerializeField] private float pickupRange;
+    [SerializeField] private float flightSpeed;
 
     void Start()
     {
@@ -28,19 +28,26 @@ public class Pickup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        print("Collided!");
         if (other.tag.Equals("Player"))
         {
             if (gameObject.tag.Equals("Food"))
             {
+                print("Player has eaten food!");
+                Destroy(gameObject);
+
+                foodSpawner.CreateFood();
+
+                this.gameObject.transform.localScale += new Vector3(grow, grow, grow);
+                print("Player has grown!");
+
                 IStomach stomach = other.GetComponent<IStomach>();
                 if (stomach != null)
                 {
                     stomach.FoodAmount = stomach.FoodAmount + 1;
-                    print("Player has eaten food!");
+                    
                     Destroy(gameObject);
                     foodSpawner.CreateFood();
-                    Vector3 newScale = Player.transform.localScale + new Vector3(grow, grow, grow);
-                    Player.transform.localScale = newScale;
                 }
             }
 
@@ -52,9 +59,8 @@ public class Pickup : MonoBehaviour
                     inventory.ItemAmount = inventory.ItemAmount + 1;
                     print("Player inventory has " + inventory.ItemAmount + " items in it!");
                 }
+                Destroy(gameObject);
             }
-
-            Destroy(gameObject);
         }
     }
 }

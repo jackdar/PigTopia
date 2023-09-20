@@ -143,5 +143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e02c6d9c4e6ab1246a9fb03eff3779c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grow: 1
   pickupRange: 2
   flightSpeed: 4
