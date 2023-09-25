@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.UI;
@@ -30,7 +31,11 @@ public class Pickup : MonoBehaviour
         vcam = GameObject.Find("Player Camera").GetComponent<CinemachineVirtualCamera>();
         popSound = gameObject.GetComponent<AudioSource>();
         score = 0;
+<<<<<<< Updated upstream
         player_score.text = "Score: " + score;
+=======
+        player_score.text = "Score: "+score;
+>>>>>>> Stashed changes
     }
 
     void Update()
@@ -60,8 +65,13 @@ public class Pickup : MonoBehaviour
                 {
                     stomach.FoodAmount = stomach.FoodAmount + 1;
                     score += 10;
+<<<<<<< Updated upstream
                     player_score.text = "Score: "+ score;
                     print("Score added!");
+=======
+                    player_score.text = "Score" + score;
+                    print("Score Added!");
+>>>>>>> Stashed changes
                     print("Player has eaten food!");
                     popSound.Play();
                     Destroy(gameObject);
