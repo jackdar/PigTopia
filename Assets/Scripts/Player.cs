@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -8,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameInput gameInput;
     [SerializeField] private SpriteRenderer playerSprite;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private TMP_Text score;
     
     private float moveSpeed = 4.0f;
     private bool isFacingLeft = true;
@@ -51,5 +53,10 @@ public class Player : MonoBehaviour
             isFacingLeft = true;
             isFacingRight = false;
         }
+    }
+
+    public void updateScore()
+    {
+        score.text = (score.text + 1).ToString();
     }
 }

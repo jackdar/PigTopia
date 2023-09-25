@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using Cinemachine;
+using TMPro;
 
 public class Pickup : MonoBehaviour
 {
@@ -11,9 +12,8 @@ public class Pickup : MonoBehaviour
     private FoodSpawner foodSpawner;
     private CinemachineVirtualCamera vcam;
     private AudioSource popSound;
-    private int score;
-    public Text player_score;
-
+    private GameObject scoreObj;
+    
     [SerializeField] private float pickupRange;
     [SerializeField] private float flightSpeed;
 
@@ -29,8 +29,7 @@ public class Pickup : MonoBehaviour
         foodSpawner = FoodSpawner.ins;
         vcam = GameObject.Find("Player Camera").GetComponent<CinemachineVirtualCamera>();
         popSound = gameObject.GetComponent<AudioSource>();
-        score = 0;
-        player_score.text = "Score: " + score;
+        scoreObj = GameObject.FindGameObjectWithTag("Score");
     }
 
     void Update()
@@ -59,8 +58,8 @@ public class Pickup : MonoBehaviour
                 if (stomach != null)
                 {
                     stomach.FoodAmount = stomach.FoodAmount + 1;
-                    score = 0;
-                    player_score.text = "Score: " + score;
+                    //playerScript.updateScore();
+                    scoreObj.GetComponent<ScoreLogic>().increaseScore();
                     print("Score Added!");
                     print("Player has eaten food!");
                     popSound.Play();
