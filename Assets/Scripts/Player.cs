@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public HealthBar healthBar;
+
     [SerializeField] private GameInput gameInput;
     [SerializeField] private SpriteRenderer playerSprite;
     [SerializeField] private Rigidbody2D rb;
@@ -16,11 +19,23 @@ public class Player : MonoBehaviour
     private bool isFacingRight;
     private bool isWalking;
 
+    public int max_health = 5;
+    public int current_health;
+
+    private void Start()
+    {
+        current_health = max_health;
+        healthBar.SetMax(max_health);
+    }
 
     private void Update()
     {
         HandleMovement();
         HandleFlip();
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            TakeDamage(1);
+        }
     }
 
     public bool IsWalking()
@@ -58,5 +73,11 @@ public class Player : MonoBehaviour
     public void updateScore()
     {
         score.text = (score.text + 1).ToString();
+    }
+
+    public void TakeDamage(int damage)
+    {
+        current_health -= damage;
+        healthBar.SetHealth(current_health);
     }
 }
