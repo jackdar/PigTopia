@@ -11,6 +11,11 @@ public class NetworkRunnerHandler : MonoBehaviour
     [SerializeField]
     NetworkRunner networkRunnerPrefab;
 
+    [Header("Networking")]
+    [SerializeField] string ipAddress;
+    [SerializeField] ushort port;
+    [SerializeField] Boolean netAddressAny = true;
+
     NetworkRunner runner;
 
     private void Awake()
@@ -41,7 +46,14 @@ public class NetworkRunnerHandler : MonoBehaviour
             Utils.DebugLog("NetworkRunner Server mode");
 #endif
 
-            InitializeNetworkRunner(runner, gameMode, "Test Session", NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
+            InitializeNetworkRunner(
+                runner,
+                gameMode,
+                "Test Session",
+                netAddressAny == true ? NetAddress.Any() : NetAddress.CreateFromIpPort(ipAddress, port),
+                SceneManager.GetActiveScene().buildIndex,
+                null
+            );
 
             Utils.DebugLog($"Server NetworkRunner started.");
         }    
