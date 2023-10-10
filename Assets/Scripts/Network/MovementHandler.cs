@@ -10,6 +10,10 @@ public class MovementHandler : NetworkBehaviour
     [Networked(OnChanged = nameof(OnSizeChanged))]
     ushort size { get; set; } // Max 65,535
 
+    private CharacterController _controller;
+
+    public float PlayerSpeed = 2f;
+
     // Other components
     SpriteRenderer spriteRenderer;
     Rigidbody2D rigidbody2D_;
