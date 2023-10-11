@@ -10,6 +10,8 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField]
     NetworkPlayer playerPrefab;
 
+    InputHandler inputHandler;
+
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         Utils.DebugLog("OnPlayerJoined");
@@ -22,7 +24,14 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-
+        if(inputHandler == null && NetworkPlayer.Local != null)
+        {
+            inputHandler = NetworkPlayer.Local.GetComponent<InputHandler>();
+        }
+        if(inputHandler != null)
+        {
+            input.Set(inputHandler.GetNetworkInput());
+        }
     }
 
     public void OnConnectedToServer(NetworkRunner runner) { Utils.DebugLog("OnConnectedToServer"); }

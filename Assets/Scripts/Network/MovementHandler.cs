@@ -36,6 +36,11 @@ public class MovementHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        if(GetInput(out NetworkInputData networkInputData))
+        {
+            inputDirection = networkInputData.movementInput;
+        }
+
         // Server moves the network objects
         if (Object.HasStateAuthority)
         {
