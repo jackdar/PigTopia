@@ -9,7 +9,12 @@ public class InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        inputVector = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+        Vector3 mouseWorldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mouseWorldPoint.z = 0;
+
+        inputVector = mouseWorldPoint - transform.position;
+
+        inputVector.Normalize();
     }
 
     public NetworkInputData GetNetworkInput()
