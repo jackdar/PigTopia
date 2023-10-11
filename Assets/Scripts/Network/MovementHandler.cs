@@ -17,12 +17,14 @@ public class MovementHandler : NetworkBehaviour
     // Other components
     SpriteRenderer spriteRenderer;
     Rigidbody2D rigidbody2D_;
+    BoxCollider2D box_collider; 
 
     void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         rigidbody2D_ = GetComponent<Rigidbody2D>();
         _controller = GetComponent<CharacterController>();
+        box_collider = GetComponentInChildren<BoxCollider2D>();
     }
 
     // Start is called before the first frame update
@@ -79,6 +81,8 @@ public class MovementHandler : NetworkBehaviour
 
             if (rigidbody2D_.velocity.magnitude > movementSpeed)
                 rigidbody2D_.velocity = rigidbody2D_.velocity.normalized * movementSpeed;
+
+                CollisionCheck();
         }
     }
 
@@ -99,9 +103,31 @@ public class MovementHandler : NetworkBehaviour
         size = 1;
     }
 
+    void CollisionCheck()
+    {
+        box_collider.enabled = false; 
+        Collider2D hit = Runner.GetPhysicsScene2D().OverlapCircle(spriteRenderer.transform.position, (spriteRenderer.transform.localScale.x / 2f) * 0.8f);
+        box_collider.enabled = true; 
+
+        if (hit != null)
+        {
+            if (hit.CompareTag("Food"))
+            {
+                hit.transform.position = Utils.GetRandomSpawnPosition();
+                OnCollectFood(5);
+            }
+        }
+    }
+
     void UpdateSize()
     {
         spriteRenderer.transform.localScale = Vector3.one + Vector3.one * 100 * (size / 65535f);
+    }
+
+    void OnCollectFood(ushort growSize)
+    {
+        size  += growSize;
+        UpdateSize();
     }
 
     public static void OnSizeChanged(Changed<MovementHandler> changed)
