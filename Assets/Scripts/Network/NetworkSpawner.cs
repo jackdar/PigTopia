@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
+public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [Header("Food")]
     [SerializeField]
@@ -18,11 +18,12 @@ public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
     InputHandler inputHandler;
     bool isSpawned = false;
 
-    public void SpawnFood()
+    public void SpawnFood(NetworkRunner runner)
     {
         for (int i = 0; i < 300; i++)
         {
-            NetworkObject SpawnedGameObject = Runner.Spawn(foodPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
+            Utils.DebugLog($"Printing food {i}");
+            NetworkObject SpawnedGameObject = runner.Spawn(foodPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
             SpawnedGameObject.transform.position = Utils.GetRandomSpawnPosition();
         }
         isSpawned = true;
@@ -36,9 +37,11 @@ public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
         {
             NetworkPlayer spawnedNetworkPlayer = runner.Spawn(playerPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity, player);
             spawnedNetworkPlayer.playerState = NetworkPlayer.PlayerState.connected;
+            Utils.DebugLog($"isSpawned = {isSpawned}");
             if (!isSpawned)
             {
-                SpawnFood();
+                Utils.DebugLog($"Food now spawning");
+                SpawnFood(runner);
             }
         }
     }

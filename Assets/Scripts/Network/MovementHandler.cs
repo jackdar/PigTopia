@@ -79,10 +79,12 @@ public class MovementHandler : NetworkBehaviour
             // Push the object in a given direction
             rigidbody2D_.AddForce(movementDirection * movementSpeed, ForceMode2D.Impulse);
 
-            if (rigidbody2D_.velocity.magnitude > movementSpeed)
-                rigidbody2D_.velocity = rigidbody2D_.velocity.normalized * movementSpeed;
+            //if (rigidbody2D_.velocity.magnitude > movementSpeed)
+            //    rigidbody2D_.velocity = rigidbody2D_.velocity.normalized * movementSpeed;
 
-                CollisionCheck();
+            rigidbody2D_.velocity = movementDirection * playerSpeed;
+
+            CollisionCheck();
         }
     }
 
