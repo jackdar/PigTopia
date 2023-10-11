@@ -4,27 +4,24 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    Vector2 mouseDirection = Vector2.zero;
+    Vector2 moveDir = Vector2.zero;
 
     // Update is called once per frame
     void Update()
     {
-        //Convert the mouse from screen space to world space
-        Vector3 mouseWorldPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        mouseWorldPoint.z = 0;
-
-        //Calculate the direction of the mouse based on the players object.
-        mouseDirection = mouseWorldPoint - transform.position;
-
-        //Normalize if to ensure that we get a range from -1 to 1
-        mouseDirection.Normalize();
+        if (Input.GetKey(KeyCode.W)) moveDir.y = +1f;
+        if (Input.GetKey(KeyCode.S)) moveDir.y = -1f;
+        if (Input.GetKey(KeyCode.A)) moveDir.x = -1f;
+        if (Input.GetKey(KeyCode.D)) moveDir.x = +1f;
+        
+        moveDir.Normalize();
     }
 
     public NetworkInputData GetNetworkInput()
     {
         NetworkInputData networkInputData = new NetworkInputData();
 
-        networkInputData.movementInput = mouseDirection;
+        networkInputData.movementInput = moveDir;
 
         return networkInputData;
     }
