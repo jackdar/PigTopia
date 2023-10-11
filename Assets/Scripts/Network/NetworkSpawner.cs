@@ -6,28 +6,11 @@ using UnityEngine;
 
 public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
-    [Header("Food")]
-    [SerializeField]
-    GameObject foodPrefab;
-
     [Header("Player")]
     [SerializeField]
     NetworkPlayer playerPrefab;
 
-    // Other components
     InputHandler inputHandler;
-    bool isSpawned = false;
-
-    public void SpawnFood(NetworkRunner runner)
-    {
-        for (int i = 0; i < 300; i++)
-        {
-            Utils.DebugLog($"Printing food {i}");
-            NetworkObject SpawnedGameObject = runner.Spawn(foodPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
-            SpawnedGameObject.transform.position = Utils.GetRandomSpawnPosition();
-        }
-        isSpawned = true;
-    }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
@@ -36,23 +19,19 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             NetworkPlayer spawnedNetworkPlayer = runner.Spawn(playerPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity, player);
-            spawnedNetworkPlayer.playerState = NetworkPlayer.PlayerState.connected;
-            Utils.DebugLog($"isSpawned = {isSpawned}");
-            if (!isSpawned)
-            {
-                Utils.DebugLog($"Food now spawning");
-                SpawnFood(runner);
-            }
         }
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        if (inputHandler == null && NetworkPlayer.Local != null)
+        if(inputHandler == null && NetworkPlayer.Local != null)
+        {
             inputHandler = NetworkPlayer.Local.GetComponent<InputHandler>();
-
-        if (inputHandler != null)
+        }
+        if(inputHandler != null)
+        {
             input.Set(inputHandler.GetNetworkInput());
+        }
     }
 
     public void OnConnectedToServer(NetworkRunner runner) { Utils.DebugLog("OnConnectedToServer"); }
@@ -70,4 +49,9 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
 
+    
+
+    
+
+    
 }
