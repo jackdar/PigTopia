@@ -19,6 +19,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             NetworkPlayer spawnedNetworkPlayer = runner.Spawn(playerPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity, player);
+            spawnedNetworkPlayer.playerState = NetworkPlayer.PlayerState.connected;
         }
     }
 

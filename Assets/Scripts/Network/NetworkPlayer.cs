@@ -29,8 +29,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     // Other components
     InGameUIHandler inGameUIHandler;
     MovementHandler movementHandler;
-
-
+    
     void Awake()
     {
         inGameUIHandler = FindObjectOfType<InGameUIHandler>();

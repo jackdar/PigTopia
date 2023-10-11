@@ -75,11 +75,15 @@ public class MovementHandler : NetworkBehaviour
 
             float movementSpeed = (size / Mathf.Pow(size, 1.1f)) * 2;
 
-            // Push the object in a given direction
-            rigidbody2D_.AddForce(movementDirection * movementSpeed, ForceMode2D.Impulse);
+            rigidbody2D_.velocity = movementDirection * movementSpeed;
 
-            if (rigidbody2D_.velocity.magnitude > movementSpeed)
-                rigidbody2D_.velocity = rigidbody2D_.velocity.normalized * movementSpeed;
+            // Push the object in a given direction
+            //rigidbody2D_.AddForce(movementDirection * 0.1f, ForceMode2D.Impulse);
+
+            //if (rigidbody2D_.velocity.magnitude > movementSpeed)
+            //    rigidbody2D_.velocity = rigidbody2D_.velocity.normalized * movementSpeed;
+
+            //rigidbody2D_.velocity = movementDirection * PlayerSpeed;
         }
     }
 
