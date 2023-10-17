@@ -9,6 +9,12 @@ public class InGameUIHandler : MonoBehaviour
     [Header("Buttons")]
     [SerializeField]
     Button joinGameButton;
+    [SerializeField]
+    Button resumeGameButton;
+    [SerializeField]
+    Button settingsGameButton;
+    [SerializeField]
+    Button quitGameButton;
 
     //[Header("Texts")]
     //[SerializeField]
@@ -25,15 +31,19 @@ public class InGameUIHandler : MonoBehaviour
     [SerializeField] 
     TMP_InputField nameInputField;
 
-    [Header("Canvas")]
+    [Header("Join Canvas")]
     [SerializeField] 
     Canvas joinGameCanvas;
+    [SerializeField]
+    Canvas pauseGameCanvas;
 
     void Start()
     {
         //statusText.gameObject.SetActive(false);
 
         SetJoinButtonState(false);
+        pauseGameCanvas.gameObject.SetActive(false);
+
     }
 
     //public void SetConnectionType(string type)
@@ -53,8 +63,9 @@ public class InGameUIHandler : MonoBehaviour
 
         NetworkPlayer.Local.JoinGame(nameInputField.text);
 
-        //Hide the join game canvas
+        //Hide the join and pause game canvas
         joinGameCanvas.gameObject.SetActive(false);
+        
 
         //Show the status text
         //statusText.gameObject.SetActive(true);
@@ -67,5 +78,22 @@ public class InGameUIHandler : MonoBehaviour
         if (isEnabled)
             joinGameButton.GetComponentInChildren<TextMeshProUGUI>().text = "Join Game";
         else joinGameButton.GetComponentInChildren<TextMeshProUGUI>().text = "Connecting to server";
+    }
+
+    public void OnGamePaused()
+    {
+        if (pauseGameCanvas.gameObject.activeSelf)
+        {
+            SetPauseMenuState(false);
+        }
+        else
+        {
+            SetPauseMenuState(true);
+        }
+    }
+
+    public void SetPauseMenuState(bool isEnabled)
+    {
+        pauseGameCanvas.gameObject.SetActive(isEnabled);
     }
 }
