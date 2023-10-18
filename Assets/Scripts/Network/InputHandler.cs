@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour
@@ -7,6 +8,17 @@ public class InputHandler : MonoBehaviour
     Vector2 moveDir = Vector2.zero;
 
     private PlayerInputActions playerInputActions;
+
+    private Canvas canvas;
+
+    private bool isKeyPressed = false;
+    private float debounce = 0.2f;
+    private float lastKeyPressTime;
+
+    void Start()
+    {
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+    }
 
     void Awake()
     {
@@ -17,20 +29,36 @@ public class InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKey(KeyCode.W)) moveDir.y = +1f;
-        //if (Input.GetKey(KeyCode.S)) moveDir.y = -1f;
-        //if (Input.GetKey(KeyCode.A)) moveDir.x = -1f;
-        //if (Input.GetKey(KeyCode.D)) moveDir.x = +1f;
-        //
-        //moveDir.Normalize();
+        // Pause menu button
+        if (playerInputActions.Player.Pause.IsPressed() && !isKeyPressed)
+        {
+            HandlePauseMenu();
+            isKeyPressed = true;
+            lastKeyPressTime = Time.time;
+        }
+
+        // Key debounce
+        if (isKeyPressed && Time.time - lastKeyPressTime > debounce)
+        {
+            isKeyPressed = false;
+        }
     }
 
     public NetworkInputData GetNetworkInput()
     {
         NetworkInputData networkInputData = new NetworkInputData();
 
-        networkInputData.movementInput = playerInputActions.Player.Move.ReadValue<Vector2>();
+        if (!canvas.GetComponent<InGameUIHandler>().GetPauseMenuState())
+        {
+            networkInputData.movementInput = playerInputActions.Player.Move.ReadValue<Vector2>();
+        }
+        
 
         return networkInputData;
+    }
+
+    public void HandlePauseMenu()
+    {
+        canvas.GetComponent<InGameUIHandler>().OnPauseGame();
     }
 }

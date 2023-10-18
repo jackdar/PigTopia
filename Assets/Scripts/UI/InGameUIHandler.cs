@@ -9,43 +9,30 @@ public class InGameUIHandler : MonoBehaviour
     [Header("Buttons")]
     [SerializeField]
     Button joinGameButton;
-
-    //[Header("Texts")]
-    //[SerializeField]
-    //TextMeshProUGUI statusText;
-    //
-    //[Header("Stats")]
-    //[SerializeField]
-    //TextMeshProUGUI connectionTypeText;
-    //
-    //[SerializeField]
-    //TextMeshProUGUI rttText;
+    [SerializeField]
+    Button resumeButton;
+    [SerializeField]
+    Button settingsButton;
+    [SerializeField]
+    Button exitButton;
 
     [Header("Input")]
     [SerializeField] 
     TMP_InputField nameInputField;
 
     [Header("Canvas")]
-    [SerializeField] 
+    [SerializeField]
     Canvas joinGameCanvas;
+    [SerializeField]
+    Canvas cameraCanvas;
+    [SerializeField]
+    Canvas pauseGameCanvas;
 
     void Start()
     {
-        //statusText.gameObject.SetActive(false);
-
         SetJoinButtonState(false);
+        SetPauseMenuState(false);
     }
-
-    //public void SetConnectionType(string type)
-    //{
-    //    connectionTypeText.text = $"Connection type: {type}"; 
-    //}
-    //
-    //public void SetRtt(string rtt)
-    //{
-    //    rttText.text = rtt;
-    //}
-
 
     public void OnJoinGame()
     {
@@ -54,10 +41,7 @@ public class InGameUIHandler : MonoBehaviour
         NetworkPlayer.Local.JoinGame(nameInputField.text);
 
         //Hide the join game canvas
-        joinGameCanvas.gameObject.SetActive(false);
-
-        //Show the status text
-        //statusText.gameObject.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     public void SetJoinButtonState(bool isEnabled)
@@ -67,5 +51,26 @@ public class InGameUIHandler : MonoBehaviour
         if (isEnabled)
             joinGameButton.GetComponentInChildren<TextMeshProUGUI>().text = "Join Game";
         else joinGameButton.GetComponentInChildren<TextMeshProUGUI>().text = "Connecting to server";
+    }
+
+    public void OnPauseGame() {
+        SetPauseMenuState(!cameraCanvas.gameObject.activeSelf);
+    }
+
+    public bool GetPauseMenuState()
+    {
+        return cameraCanvas.gameObject.activeSelf;
+    }
+    
+    public void SetPauseMenuState(bool isEnabled)
+    {
+        cameraCanvas.gameObject.SetActive(isEnabled);
+    }
+    public void OnExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Application.Quit();
     }
 }

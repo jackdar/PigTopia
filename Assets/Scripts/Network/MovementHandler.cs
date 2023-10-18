@@ -94,7 +94,7 @@ public class MovementHandler : NetworkBehaviour
             float aspectRatio = Camera.main.aspect;
             float orthoSize = (spriteRenderer.transform.localScale.x + 7) / aspectRatio;
 
-            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, orthoSize, Time.deltaTime * 0.1f);
+            //Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, orthoSize, Time.deltaTime * 0.1f);
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(spriteRenderer.transform.position.x, spriteRenderer.transform.position.y, -10), Time.deltaTime);
         }
     }
