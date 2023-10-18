@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    Vector2 moveDir = Vector2.zero;
+    Vector2 moveDir = Vector2.zero; //initialize vector for player movement input
 
-    private PlayerInputActions playerInputActions;
+    private PlayerInputActions playerInputActions; //input actions defined by player
 
     void Awake()
     {
-        playerInputActions = new PlayerInputActions();
-        playerInputActions.Player.Enable();
+        playerInputActions = new PlayerInputActions(); //initialize the player's input actions
+        playerInputActions.Player.Enable(); //enable the player's input actions
     }
 
     // Update is called once per frame
@@ -25,10 +25,12 @@ public class InputHandler : MonoBehaviour
         //moveDir.Normalize();
     }
 
+    //get player's network input data
     public NetworkInputData GetNetworkInput()
     {
         NetworkInputData networkInputData = new NetworkInputData();
 
+        //read and store movement input from the input system
         networkInputData.movementInput = playerInputActions.Player.Move.ReadValue<Vector2>();
 
         return networkInputData;

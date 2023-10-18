@@ -12,25 +12,30 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     InputHandler inputHandler;
 
+    //called when a player joins the network
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        Utils.DebugLog("OnPlayerJoined");
+        Utils.DebugLog("OnPlayerJoined"); //log message when player joins game
 
         if (runner.IsServer)
         {
+            //spawn a player at a random position on the map
             NetworkPlayer spawnedNetworkPlayer = runner.Spawn(playerPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity, player);
             spawnedNetworkPlayer.playerState = NetworkPlayer.PlayerState.connected;
         }
     }
 
+    //called when network input is received
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         if(inputHandler == null && NetworkPlayer.Local != null)
         {
+            //if inputHandler is not set and a local player exists, get the InputHandler component
             inputHandler = NetworkPlayer.Local.GetComponent<InputHandler>();
         }
         if(inputHandler != null)
         {
+            // set the network input to the input received from the InputHandler
             input.Set(inputHandler.GetNetworkInput());
         }
     }
