@@ -29,7 +29,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     // Other components
     InGameUIHandler inGameUIHandler;
     MovementHandler movementHandler;
-    
+
     void Awake()
     {
         inGameUIHandler = FindObjectOfType<InGameUIHandler>();
@@ -39,7 +39,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     public override void FixedUpdateNetwork()
@@ -56,6 +56,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         Vector3 newPosition = Utils.GetRandomSpawnPosition();
 
+        playerSpriteRenderer.color = inGameUIHandler.pigColor;
+
         // Teleport player to new position
         GetComponent<NetworkRigidbody2D>().TeleportToPosition(newPosition);
 
@@ -69,7 +71,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         if (Object.HasInputAuthority)
         {
             Local = this;
-
+            tag = "LocalPlayer";
             inGameUIHandler.SetJoinButtonState(true);
         }
 
@@ -137,4 +139,5 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
         ResetPlayer();
     }
+
 }

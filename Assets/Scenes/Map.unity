@@ -11225,7 +11225,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 1, g: 0.46326303, b: 0.4481132, a: 1}
     m_PressedColor: {r: 0.7924528, g: 0.02175361, b: 0, a: 1}
     m_SelectedColor: {r: 1, g: 0.027450982, b: 0, a: 1}
-    m_DisabledColor: {r: 1, g: 0.027450982, b: 0, a: 1}
+    m_DisabledColor: {r: 0.990566, g: 0.88604903, b: 0.88309896, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -11246,14 +11246,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1766700681}
         m_TargetAssemblyTypeName: InGameUIHandler, Assembly-CSharp
-        m_MethodName: OnJoinGame
-        m_Mode: 1
+        m_MethodName: HandleColour
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: red
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &148835791
@@ -12056,7 +12056,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.99215686, g: 0.7764706, b: 1, a: 1}
     m_PressedColor: {r: 0.9637913, g: 0.41037738, b: 1, a: 1}
     m_SelectedColor: {r: 0.99215686, g: 0.61960787, b: 1, a: 1}
-    m_DisabledColor: {r: 0.99215686, g: 0.61960787, b: 1, a: 1}
+    m_DisabledColor: {r: 0.9983466, g: 0.9198113, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -12077,14 +12077,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1766700681}
         m_TargetAssemblyTypeName: InGameUIHandler, Assembly-CSharp
-        m_MethodName: OnJoinGame
-        m_Mode: 1
+        m_MethodName: HandleColour
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: pink
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &185062327
@@ -36773,10 +36773,10 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.11764707, g: 0.34117648, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.11764707, g: 0.34117648, b: 1, a: 1}
-    m_PressedColor: {r: 0.7924528, g: 0.02175361, b: 0, a: 1}
-    m_SelectedColor: {r: 1, g: 0.027450982, b: 0, a: 1}
-    m_DisabledColor: {r: 1, g: 0.027450982, b: 0, a: 1}
+    m_HighlightedColor: {r: 0.4669811, g: 0.6020127, b: 1, a: 1}
+    m_PressedColor: {r: 0.028835872, g: 0.1936064, b: 0.6792453, a: 1}
+    m_SelectedColor: {r: 0.11764707, g: 0.34117648, b: 1, a: 1}
+    m_DisabledColor: {r: 0.8469206, g: 0.8809209, b: 0.9811321, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -36797,14 +36797,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1766700681}
         m_TargetAssemblyTypeName: InGameUIHandler, Assembly-CSharp
-        m_MethodName: OnJoinGame
-        m_Mode: 1
+        m_MethodName: HandleColour
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: blue
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1080522806
@@ -42913,6 +42913,7 @@ RectTransform:
   - {fileID: 185062325}
   - {fileID: 148835789}
   - {fileID: 1080522804}
+  - {fileID: 1824240809}
   - {fileID: 523510871}
   m_Father: {fileID: 761416983}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -46798,6 +46799,10 @@ MonoBehaviour:
   resumeButton: {fileID: 1430026552}
   settingsButton: {fileID: 887397924}
   exitButton: {fileID: 1210563597}
+  pinkButton: {fileID: 185062326}
+  redButton: {fileID: 148835790}
+  blueButton: {fileID: 1080522805}
+  yellowButton: {fileID: 1824240810}
   nameInputField: {fileID: 30990211}
   joinGameCanvas: {fileID: 761416986}
   cameraCanvas: {fileID: 1030412095}
@@ -47376,6 +47381,138 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b598a7e71b620e4f91bd3376438a59c, type: 3}
+--- !u!1 &1824240808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1824240809}
+  - component: {fileID: 1824240812}
+  - component: {fileID: 1824240811}
+  - component: {fileID: 1824240810}
+  m_Layer: 5
+  m_Name: Yellow Button
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1824240809
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824240808}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1441228453}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.8, y: 0}
+  m_SizeDelta: {x: 0.35, y: 0.35}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1824240810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824240808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 0.8705883, g: 0.91372555, b: 0, a: 1}
+    m_HighlightedColor: {r: 0.93633544, g: 0.9622642, b: 0.41304737, a: 1}
+    m_PressedColor: {r: 0.69940025, g: 0.7264151, b: 0.15419191, a: 1}
+    m_SelectedColor: {r: 0.8705883, g: 0.91372555, b: 0, a: 1}
+    m_DisabledColor: {r: 0.9899789, g: 1, b: 0.7877358, a: 1}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1824240811}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1766700681}
+        m_TargetAssemblyTypeName: InGameUIHandler, Assembly-CSharp
+        m_MethodName: HandleColour
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: yellow
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1824240811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824240808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.8697848, g: 0.9137255, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1824240812
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824240808}
+  m_CullTransparentMesh: 1
 --- !u!4 &1835387462 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8275799371533306032, guid: 0b598a7e71b620e4f91bd3376438a59c, type: 3}

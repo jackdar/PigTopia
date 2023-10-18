@@ -16,6 +16,16 @@ public class InGameUIHandler : MonoBehaviour
     [SerializeField]
     Button exitButton;
 
+    [Header("Colour Buttons")]
+    [SerializeField]
+    Button pinkButton;
+    [SerializeField]
+    Button redButton;
+    [SerializeField]
+    Button blueButton;
+    [SerializeField]
+    Button yellowButton;
+
     [Header("Input")]
     [SerializeField] 
     TMP_InputField nameInputField;
@@ -27,6 +37,8 @@ public class InGameUIHandler : MonoBehaviour
     Canvas cameraCanvas;
     [SerializeField]
     Canvas pauseGameCanvas;
+
+    public Color pigColor;
 
     void Start()
     {
@@ -73,4 +85,13 @@ public class InGameUIHandler : MonoBehaviour
 #endif
         Application.Quit();
     }
+
+    public void HandleColour(string color)
+    {
+        if (color == "pink") pigColor = new Color(1f, 1f, 1f, 1f);
+        if (color == "red") pigColor = new Color(1f, 0.35f, 0.35f, 1f);
+        if (color == "blue") pigColor = new Color(0.35f, 1f, 1f, 1f);
+        if (color == "yellow") pigColor = new Color(0.75f, 1f, 0.15f, 1f);
+    }
+
 }
