@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class InGameUIHandler : MonoBehaviour
@@ -52,8 +53,10 @@ public class InGameUIHandler : MonoBehaviour
 
         NetworkPlayer.Local.JoinGame(nameInputField.text);
 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
         //Hide the join game canvas
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     public void SetJoinButtonState(bool isEnabled)
