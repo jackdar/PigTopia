@@ -9,43 +9,42 @@ public class InGameUIHandler : MonoBehaviour
     [Header("Buttons")]
     [SerializeField]
     Button joinGameButton;
+    [SerializeField]
+    Button resumeButton;
+    [SerializeField]
+    Button settingsButton;
+    [SerializeField]
+    Button exitButton;
 
-    //[Header("Texts")]
-    //[SerializeField]
-    //TextMeshProUGUI statusText;
-    //
-    //[Header("Stats")]
-    //[SerializeField]
-    //TextMeshProUGUI connectionTypeText;
-    //
-    //[SerializeField]
-    //TextMeshProUGUI rttText;
+    [Header("Colour Buttons")]
+    [SerializeField]
+    Button pinkButton;
+    [SerializeField]
+    Button redButton;
+    [SerializeField]
+    Button blueButton;
+    [SerializeField]
+    Button yellowButton;
 
     [Header("Input")]
     [SerializeField] 
     TMP_InputField nameInputField;
 
     [Header("Canvas")]
-    [SerializeField] 
+    [SerializeField]
     Canvas joinGameCanvas;
+    [SerializeField]
+    Canvas cameraCanvas;
+    [SerializeField]
+    Canvas pauseGameCanvas;
+
+    public Color pigColor;
 
     void Start()
     {
-        //statusText.gameObject.SetActive(false);
-
         SetJoinButtonState(false);
+        SetPauseMenuState(false);
     }
-
-    //public void SetConnectionType(string type)
-    //{
-    //    connectionTypeText.text = $"Connection type: {type}"; 
-    //}
-    //
-    //public void SetRtt(string rtt)
-    //{
-    //    rttText.text = rtt;
-    //}
-
 
     public void OnJoinGame()
     {
@@ -54,10 +53,7 @@ public class InGameUIHandler : MonoBehaviour
         NetworkPlayer.Local.JoinGame(nameInputField.text);
 
         //Hide the join game canvas
-        joinGameCanvas.gameObject.SetActive(false);
-
-        //Show the status text
-        //statusText.gameObject.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     public void SetJoinButtonState(bool isEnabled)
@@ -68,4 +64,34 @@ public class InGameUIHandler : MonoBehaviour
             joinGameButton.GetComponentInChildren<TextMeshProUGUI>().text = "Join Game";
         else joinGameButton.GetComponentInChildren<TextMeshProUGUI>().text = "Connecting to server";
     }
+
+    public void OnPauseGame() {
+        SetPauseMenuState(!cameraCanvas.gameObject.activeSelf);
+    }
+
+    public bool GetPauseMenuState()
+    {
+        return cameraCanvas.gameObject.activeSelf;
+    }
+    
+    public void SetPauseMenuState(bool isEnabled)
+    {
+        cameraCanvas.gameObject.SetActive(isEnabled);
+    }
+    public void OnExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Application.Quit();
+    }
+
+    public void HandleColour(string color)
+    {
+        if (color == "pink") pigColor = new Color(1f, 1f, 1f, 1f);
+        if (color == "red") pigColor = new Color(1f, 0.35f, 0.35f, 1f);
+        if (color == "blue") pigColor = new Color(0.35f, 1f, 1f, 1f);
+        if (color == "yellow") pigColor = new Color(0.75f, 1f, 0.15f, 1f);
+    }
+
 }
