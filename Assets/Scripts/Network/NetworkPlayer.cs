@@ -10,6 +10,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Header("Sprite")]
     public SpriteRenderer playerSpriteRenderer;
 
+    [Header("Stats")]
+    public float health, maxHealth = 20;
+    public float stamina, maxStamina = 20;
+    public int foodEaten = 0;
+
     public enum PlayerState
     {
         pendingConnect,
@@ -23,6 +28,9 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     [Networked(OnChanged = nameof(OnPlayerStateChanged))]
     public PlayerState playerState { get; set; }
+
+    [Networked(OnChanged = nameof(OnColorChanged))]
+    public Color spriteColor { get; set; }
 
     public static NetworkPlayer Local { get; set; }
 
@@ -52,11 +60,20 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         }
     }
 
-    void ResetPlayer()
+    public void ResetPlayer()
     {
         Vector3 newPosition = Utils.GetRandomSpawnPosition();
 
-        playerSpriteRenderer.color = inGameUIHandler.pigColor;
+        if (Object.HasStateAuthority)
+        {
+            spriteColor = inGameUIHandler.pigColor;
+        }
+        
+        inGameUIHandler.SetScoreboardState(true);
+
+        this.health = maxHealth;
+        this.stamina = maxStamina;
+        this.foodEaten = 0;
 
         // Teleport player to new position
         GetComponent<NetworkRigidbody2D>().TeleportToPosition(newPosition);
@@ -85,7 +102,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public void PlayerLeft(PlayerRef player)
     {
         if (player == Object.InputAuthority)
+        {
+            inGameUIHandler.players.Remove(this);
             Runner.Despawn(Object);
+        }
+
+        inGameUIHandler.HandleScoreboard();
     }
 
     static void OnNickNameChanged(Changed<NetworkPlayer> changed)
@@ -125,6 +147,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         }
     }
 
+    public static void OnColorChanged(Changed<NetworkPlayer> changed)
+    {
+        changed.Behaviour.playerSpriteRenderer.color = changed.Behaviour.spriteColor;
+    }
+
     public void JoinGame(string nickName)
     {
         RPC_JoinGame(nickName);
@@ -137,7 +164,17 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
         this.nickName = nickName;
 
+        inGameUIHandler.players.Add(this);
+        inGameUIHandler.HandleScoreboard();
+
         ResetPlayer();
+    }
+
+    public void EatFood()
+    {
+        this.foodEaten++;
+        this.health += 1.0f;
+        this.stamina += 1.0f;
     }
 
 }

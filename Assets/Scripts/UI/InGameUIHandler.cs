@@ -30,20 +30,23 @@ public class InGameUIHandler : MonoBehaviour
     [SerializeField] 
     TMP_InputField nameInputField;
 
-    [Header("Canvas")]
+    [Header("Canvases")]
     [SerializeField]
     Canvas joinGameCanvas;
     [SerializeField]
-    Canvas cameraCanvas;
-    [SerializeField]
     Canvas pauseGameCanvas;
+    [SerializeField]
+    Canvas scoreboardCanvas;
 
-    public Color pigColor;
+    public List<NetworkPlayer> players;
+
+    public Color pigColor = Color.white;
 
     void Start()
     {
         SetJoinButtonState(false);
         SetPauseMenuState(false);
+        SetScoreboardState(false);
     }
 
     public void OnJoinGame()
@@ -53,7 +56,7 @@ public class InGameUIHandler : MonoBehaviour
         NetworkPlayer.Local.JoinGame(nameInputField.text);
 
         //Hide the join game canvas
-        gameObject.SetActive(false);
+        joinGameCanvas.gameObject.SetActive(false);
     }
 
     public void SetJoinButtonState(bool isEnabled)
@@ -66,18 +69,30 @@ public class InGameUIHandler : MonoBehaviour
     }
 
     public void OnPauseGame() {
-        SetPauseMenuState(!cameraCanvas.gameObject.activeSelf);
+        SetPauseMenuState(!pauseGameCanvas.gameObject.activeSelf);
+    }
+
+    public void OnRestartGame()
+    {
+        SetPauseMenuState(!pauseGameCanvas.gameObject.activeSelf);
+        NetworkPlayer.Local.ResetPlayer();
     }
 
     public bool GetPauseMenuState()
     {
-        return cameraCanvas.gameObject.activeSelf;
+        return pauseGameCanvas.gameObject.activeSelf;
     }
     
     public void SetPauseMenuState(bool isEnabled)
     {
-        cameraCanvas.gameObject.SetActive(isEnabled);
+        pauseGameCanvas.gameObject.SetActive(isEnabled);
     }
+
+    public void SetScoreboardState(bool isEnabled)
+    {
+        scoreboardCanvas.gameObject.SetActive(isEnabled);
+    }
+
     public void OnExitGame()
     {
 #if UNITY_EDITOR
@@ -94,4 +109,13 @@ public class InGameUIHandler : MonoBehaviour
         if (color == "yellow") pigColor = new Color(0.75f, 1f, 0.15f, 1f);
     }
 
+    public void HandleScoreboard()
+    {
+        scoreboardCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "";
+
+        foreach (NetworkPlayer np in players)
+        {
+            scoreboardCanvas.GetComponentInChildren<TextMeshProUGUI>().text += np.nickName + ": " + np.foodEaten + "\n";
+        }
+    }
 }

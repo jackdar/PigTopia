@@ -318,7 +318,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5152500039096568803, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
       propertyPath: m_Color.b
-      value: 0.15
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5152500039096568803, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
       propertyPath: m_Color.g
@@ -326,7 +326,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5152500039096568803, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
       propertyPath: m_Color.r
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5152500039096568803, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
       propertyPath: m_SortingOrder
@@ -540,11 +540,17 @@ MonoBehaviour:
   _interpolationDataSource: 0
   playerNickNameTM: {fileID: 2016128103734663480}
   playerSpriteRenderer: {fileID: 4084593169159722543}
+  health: 0
+  maxHealth: 20
+  stamina: 0
+  maxStamina: 20
+  foodEaten: 0
   _nickName:
     _length: 0
     _data:
       Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   _playerState: 0
+  _spriteColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &2198755348258370316
 MonoBehaviour:
   m_ObjectHideFlags: 0
