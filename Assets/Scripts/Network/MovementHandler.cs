@@ -71,8 +71,6 @@ public class MovementHandler : NetworkBehaviour
             //     rigidbody2D_.velocity = new Vector2(rigidbody2D_.velocity.x, 0);
             // }
 
-            movementDirection.Normalize();
-
             float movementSpeed = (size / Mathf.Pow(size, 1.1f)) * 2;
 
             rigidbody2D_.velocity = movementDirection * movementSpeed;

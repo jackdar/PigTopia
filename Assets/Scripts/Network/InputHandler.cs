@@ -48,7 +48,7 @@ public class InputHandler : MonoBehaviour
     {
         NetworkInputData networkInputData = new NetworkInputData();
 
-        if (!canvas.GetComponent<InGameUIHandler>().GetPauseMenuState())
+        if (canvas != null && !canvas.GetComponent<InGameUIHandler>().GetPauseMenuState())
         {
             networkInputData.movementInput = playerInputActions.Player.Move.ReadValue<Vector2>();
         }
