@@ -9,12 +9,18 @@ public static class Utils
 
     // Return random position within the playfield.
 
+    
+
     public static Vector3 GetRandomSpawnPosition()
     {
         float playfieldSize = GetPlayfieldSize();
         float scale_x = 5.5f;
         float scale_y = 3.6f;
-        return new Vector3(Random.Range(-playfieldSize, playfieldSize) * scale_x, Random.Range(-playfieldSize, playfieldSize) * scale_y, 0) * 0.9f;
+    
+        // Adjust the X coordinate by adding 1.5
+        float newX = Random.Range(-playfieldSize, playfieldSize) * scale_x + 1.5f;
+    
+        return new Vector3(newX, Random.Range(-playfieldSize, playfieldSize) * scale_y, 0) * 0.9f;
     }
 
     public static float GetPlayfieldSize()

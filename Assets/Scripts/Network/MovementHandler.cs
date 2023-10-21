@@ -17,13 +17,21 @@ public class MovementHandler : NetworkBehaviour
     // Other components
     SpriteRenderer spriteRenderer;
     Rigidbody2D rigidbody2D_;
+<<<<<<< Updated upstream
     BoxCollider2D box_collider; 
+=======
+    BoxCollider2D boxCollider2D_;
+>>>>>>> Stashed changes
 
     void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         rigidbody2D_ = GetComponent<Rigidbody2D>();
+<<<<<<< Updated upstream
         box_collider = GetComponentInChildren<BoxCollider2D>();
+=======
+        boxCollider2D_ = GetComponentInChildren<BoxCollider2D>();
+>>>>>>> Stashed changes
     }
 
     // Start is called before the first frame update
@@ -38,6 +46,14 @@ public class MovementHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+<<<<<<< Updated upstream
+=======
+        if (GetInput(out NetworkInputData networkInputData))
+        {
+            inputDirection = networkInputData.movementInput;
+        }
+
+>>>>>>> Stashed changes
         // Server moves the network objects
         if (Object.HasStateAuthority)
         {
@@ -70,8 +86,19 @@ public class MovementHandler : NetworkBehaviour
 
             movementDirection.Normalize();
 
-            float movementSpeed = (size / Mathf.Pow(size, 1.1f)) * 2;
+            float movementSpeed = 2; // Default movement speed
 
+            if (size > 0)
+            {
+                movementSpeed = (size / Mathf.Pow(size, 1.1f)) * 2;
+            }
+
+            if (float.IsNaN(movementSpeed) || float.IsInfinity(movementSpeed))
+            {
+                movementSpeed = 2; // Set a default value to handle unexpected cases
+            }
+
+<<<<<<< Updated upstream
             // Push the object in a given direction
             rigidbody2D_.AddForce(movementDirection * movementSpeed, ForceMode2D.Impulse);
 
@@ -79,6 +106,11 @@ public class MovementHandler : NetworkBehaviour
                 rigidbody2D_.velocity = rigidbody2D_.velocity.normalized * movementSpeed;
 
                 CollisionCheck();
+=======
+            rigidbody2D_.velocity = movementDirection * movementSpeed;
+
+            CheckCollision();
+>>>>>>> Stashed changes
         }
     }
 
@@ -92,6 +124,25 @@ public class MovementHandler : NetworkBehaviour
             Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, orthoSize, Time.deltaTime * 0.1f);
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(spriteRenderer.transform.position.x, spriteRenderer.transform.position.y, -10), Time.deltaTime);
         }
+    }
+
+    void CheckCollision()
+    {
+        boxCollider2D_.enabled = false;
+        Collider2D hit = Physics2D.OverlapBox(spriteRenderer.transform.position, (spriteRenderer.transform.localScale / 2f) * 0.8f, 0f);
+        boxCollider2D_.enabled = true;
+
+        if (hit != null && hit.CompareTag("Food"))
+        {
+            hit.transform.position = Utils.GetRandomSpawnPosition();
+            CollectFood(10);
+        }
+    }
+
+    void CollectFood(ushort grow)
+    {
+        size += grow;
+        UpdateSize();
     }
 
     public void Reset()
