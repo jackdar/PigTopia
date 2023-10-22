@@ -6,7 +6,8 @@ using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
     Vector2 moveDir = Vector2.zero;
-
+    private bool isFireButtonPressed = false;
+    
     private PlayerInputActions playerInputActions;
 
     private Canvas canvas;
@@ -15,6 +16,8 @@ public class InputHandler : MonoBehaviour
     private float debounce = 0.2f;
     private float lastKeyPressTime;
 
+    private MovementHandler movementHandler;
+    
     void Start()
     {
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
@@ -24,17 +27,27 @@ public class InputHandler : MonoBehaviour
     {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
+        movementHandler = GetComponent<MovementHandler>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!movementHandler.Object.HasInputAuthority)
+        {
+            return;
+        }
         // Pause menu button
         if (playerInputActions.Player.Pause.IsPressed() && !isKeyPressed)
         {
             HandlePauseMenu();
             isKeyPressed = true;
             lastKeyPressTime = Time.time;
+        }
+
+        if (playerInputActions.Player.Fire.IsPressed())
+        {
+            HandleFire();
         }
 
         // Key debounce
@@ -52,7 +65,11 @@ public class InputHandler : MonoBehaviour
         {
             networkInputData.movementInput = playerInputActions.Player.Move.ReadValue<Vector2>();
         }
+
+        networkInputData.isFireButtonPressed = isFireButtonPressed;
         
+        // Resetting the state after reading the variable
+        isFireButtonPressed = false;
 
         return networkInputData;
     }
@@ -60,5 +77,11 @@ public class InputHandler : MonoBehaviour
     public void HandlePauseMenu()
     {
         canvas.GetComponent<InGameUIHandler>().OnPauseGame();
+    }
+
+    private void HandleFire()
+    {
+        isFireButtonPressed = true;
+        Debug.Log("Fire button pressed!");
     }
 }

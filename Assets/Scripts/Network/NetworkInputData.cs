@@ -6,4 +6,6 @@ using UnityEngine;
 public struct NetworkInputData : INetworkInput
 {
     public Vector2 movementInput;
+    public Vector2 aimForwardVector;
+    public NetworkBool isFireButtonPressed;
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class MovementHandler : NetworkBehaviour
 {
     Vector2 inputDirection = Vector2.zero;
-
+    private bool isFireButtonPressed = false;
     [Networked(OnChanged = nameof(OnSizeChanged))]
     ushort size { get; set; } // Max 65,535
 
