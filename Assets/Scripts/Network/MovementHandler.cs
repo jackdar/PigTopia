@@ -34,6 +34,7 @@ public class MovementHandler : NetworkBehaviour
         UpdateSize();
     }
 
+
     public override void FixedUpdateNetwork()
     {
         if(GetInput(out NetworkInputData networkInputData))
@@ -53,6 +54,7 @@ public class MovementHandler : NetworkBehaviour
             rigidbody2D_.velocity = movementDirection * movementSpeed;
         }
     }
+
 
     void LateUpdate()
     {

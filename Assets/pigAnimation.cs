@@ -18,4 +18,5 @@ public class pigAnimation : MonoBehaviour
     {
         animator.SetBool(IS_WALKING, player.IsWalking());
     }
+
 }

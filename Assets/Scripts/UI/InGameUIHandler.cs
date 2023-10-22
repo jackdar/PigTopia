@@ -41,23 +41,60 @@ public class InGameUIHandler : MonoBehaviour
 
     public Color pigColor;
 
+    public static bool isPauseMenuVisible = false;
+    public GameObject pauseMenuUI;
+
+
     void Start()
     {
         SetJoinButtonState(false);
-        SetPauseMenuState(false);
+        pauseGameCanvas.gameObject.SetActive(false);
+        //SetPauseMenuState(false);
     }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPauseMenuVisible)
+            {
+                Resume();
+            }
+            else
+            {
+                Pause();
+            }
+
+            isPauseMenuVisible = !isPauseMenuVisible;
+            pauseGameCanvas.gameObject.SetActive(!pauseGameCanvas.gameObject.activeSelf);     
+        }
+    }
+
+    void Resume()
+    {
+        pauseMenuUI.SetActive(false);
+        isPauseMenuVisible = false;
+    }
+
+    void Pause()
+    {
+        pauseMenuUI.SetActive(true);
+        isPauseMenuVisible = true;
+    }
+
+
 
     public void OnJoinGame()
     {
-        Utils.DebugLog("OnJoinGame clicked");
+            Utils.DebugLog("OnJoinGame clicked");
 
-        NetworkPlayer.Local.JoinGame(nameInputField.text);
+            NetworkPlayer.Local.JoinGame(nameInputField.text);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
-        //Hide the join game canvas
-        //gameObject.SetActive(false);
+            //Hide the join game canvas
+            gameObject.SetActive(false); 
+        
     }
+
 
     public void SetJoinButtonState(bool isEnabled)
     {
@@ -69,7 +106,8 @@ public class InGameUIHandler : MonoBehaviour
     }
 
     public void OnPauseGame() {
-        SetPauseMenuState(!cameraCanvas.gameObject.activeSelf);
+
+        SetPauseMenuState(!GetPauseMenuState());  
     }
 
     public bool GetPauseMenuState()
@@ -79,8 +117,10 @@ public class InGameUIHandler : MonoBehaviour
     
     public void SetPauseMenuState(bool isEnabled)
     {
-        cameraCanvas.gameObject.SetActive(isEnabled);
+        pauseGameCanvas.gameObject.SetActive(isEnabled);
     }
+ 
+
     public void OnExitGame()
     {
 #if UNITY_EDITOR
@@ -88,7 +128,7 @@ public class InGameUIHandler : MonoBehaviour
 #endif
         Application.Quit();
     }
-
+        
     public void HandleColour(string color)
     {
         if (color == "pink") pigColor = new Color(1f, 1f, 1f, 1f);
