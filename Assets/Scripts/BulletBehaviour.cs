@@ -52,7 +52,7 @@ public class BulletBehaviour : NetworkBehaviour
     // Check if bullet will hit in next tick
     private bool HasHitPlayer()
     {
-        var hitPlayer = Runner.LagCompensation.Raycast(transform.position, transform.forward, speed * Runner.DeltaTime,
+        var hitPlayer = Runner.LagCompensation.Raycast(transform.position, transform.up, speed * Runner.DeltaTime,
             Object.InputAuthority, out var hit, playerLayer);
 
         if (hitPlayer == false)
@@ -60,14 +60,14 @@ public class BulletBehaviour : NetworkBehaviour
             return false;
         }
 
-        var bulletBehaviour = hit.GameObject.GetComponent<PlayerBehaviour>();
+        var playerBehaviour = hit.GameObject.GetComponent<PlayerBehaviour>();
 
-        if (bulletBehaviour.IsAlive == false)
+        if (playerBehaviour.IsAlive == false)
         {
             return false;
         }
 
-        bulletBehaviour.HitPlayer(Object.InputAuthority);
+        playerBehaviour.HitPlayer(Object.InputAuthority);
 
         return true;
 
