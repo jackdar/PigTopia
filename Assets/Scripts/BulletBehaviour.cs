@@ -32,6 +32,7 @@ public class BulletBehaviour : NetworkBehaviour
         }
         else
         {
+            Debug.Log("player was hit");
             Runner.Despawn(Object);
             return;
         }
@@ -52,9 +53,8 @@ public class BulletBehaviour : NetworkBehaviour
     // Check if bullet will hit in next tick
     private bool HasHitPlayer()
     {
-        var hitPlayer = Runner.LagCompensation.Raycast(transform.position, transform.up, speed * Runner.DeltaTime,
+        var hitPlayer = Runner.LagCompensation.Raycast(transform.position, transform.forward, speed * Runner.DeltaTime,
             Object.InputAuthority, out var hit, playerLayer);
-
         if (hitPlayer == false)
         {
             return false;
