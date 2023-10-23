@@ -10,6 +10,14 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Header("Sprite")]
     public SpriteRenderer playerSpriteRenderer;
 
+    public HealthBar healthbar;
+    public int maxHealth = 5;
+    public int currentHealth;
+
+    public StaminaBar staminabar;
+    public float maxStamina = 3;
+    public float currentStamina;
+
     public enum PlayerState
     {
         pendingConnect,
@@ -39,7 +47,47 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     // Start is called before the first frame update
     void Start()
     {
+        currentHealth = maxHealth;
+        healthbar.SetMaxHealth(maxHealth);
+        currentStamina = maxStamina;
+        staminabar.SetMaxStamina(maxStamina);
+    }
 
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            TakeDamage(1);
+        }
+        else if(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            getTired(1);
+        }
+        else if(currentStamina != maxStamina)
+        {
+            getStamina(1);
+        }
+    }
+
+    void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        healthbar.SetHealth(currentHealth);
+    }
+
+    void getTired(float tired)
+    {
+        if (currentStamina != 0)
+        {
+            currentStamina -= tired;
+            staminabar.SetStamina(currentStamina);
+        }
+    }
+
+    void getStamina(float booster)
+    {
+        currentStamina += booster * Time.deltaTime;
+        staminabar.SetStamina(currentStamina);
     }
 
     public override void FixedUpdateNetwork()
