@@ -19,7 +19,7 @@ public class InGameUIHandler : MonoBehaviour
     [Header("Input")]
     [SerializeField] 
     TMP_InputField nameInputField;
-
+    
     [Header("Canvas")]
     [SerializeField]
     Canvas joinGameCanvas;
@@ -28,6 +28,8 @@ public class InGameUIHandler : MonoBehaviour
     [SerializeField]
     Canvas pauseGameCanvas;
 
+    private string _nickName = null;
+    
     void Start()
     {
         SetJoinButtonState(false);
@@ -39,7 +41,8 @@ public class InGameUIHandler : MonoBehaviour
         Utils.DebugLog("OnJoinGame clicked");
 
         NetworkPlayer.Local.JoinGame(nameInputField.text);
-
+        SetNickName(nameInputField.text);
+        
         //Hide the join game canvas
         gameObject.SetActive(false);
     }
@@ -72,5 +75,20 @@ public class InGameUIHandler : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
         Application.Quit();
+    }
+
+    public void SetNickName(string nickName)
+    {
+        _nickName = nickName;
+    }
+    
+    public string GetNickName()
+    {
+        if (string.IsNullOrWhiteSpace(_nickName))
+        {
+            _nickName = "Test Data";
+        }
+
+        return _nickName;
     }
 }

@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
 using Fusion;
+using Weapon;
 
 public class WeaponHandler : NetworkBehaviour
 {
+    [Header("Prefabs")] public BulletHandler bulletPrefab;
+    
     [Networked(OnChanged = nameof(OnFireChanged))]
     public bool isFiring { get; set; }
 
     public ParticleSystem fireParticleSystem;
     
     private float lastTimeFired = 0;
+    
+    //Timing
+    TickTimer bulletFireDelay = TickTimer.None;
 // Start is called before the first frame update
     void Start()
     {
@@ -38,10 +44,10 @@ public class WeaponHandler : NetworkBehaviour
         }
 
         StartCoroutine(FireEffectCO());
-        // Runner.Spawn(bulletPrefab, aimPoint.position + aimForwardVector * 1.5f), Object.InputAuthority, (runner, spawnedBullet) =>
-        // {
-        //     spawnedBullet.GetComponent<WeaponHandler>().Throw(aimForwardVector * 15, Object.InputAuthority,"Test");
-        // }
+        Runner.Spawn(bulletPrefab, aimForwardVector, Quaternion.LookRotation(aimForwardVector), Object.InputAuthority, (runner, spawnedBullet) =>
+        {
+            spawnedBullet.GetComponent<BulletHandler>().Throw(aimForwardVector * 15, Object.InputAuthority, "Test");
+        });
         lastTimeFired = Time.time;
     }
 
