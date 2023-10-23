@@ -6,8 +6,8 @@ using UnityEngine;
 public class BulletBehaviour : NetworkBehaviour
 {
     // Bullet Settings
-    [SerializeField] private float maxLifetime = 3.0f;
-    [SerializeField] private float speed = 200f;
+    [SerializeField] private float maxLifetime = 1.0f;
+    [SerializeField] private float speed = 15f;
     [SerializeField] private LayerMask playerLayer;
     
     [Networked] private TickTimer _currentLifetime { get; set; }
