@@ -4,11 +4,30 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
+public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
 {
+    [Header("Food")]
+    [SerializeField]
+    NetworkObject foodPrefab;
+
     [Header("Player")]
     [SerializeField]
     NetworkPlayer playerPrefab;
+
+    InputHandler inputHandler;
+
+    private bool isFoodSpawned = false;
+    
+    void SpawnFood()
+    {
+        for (int i = 0; i < 300; i++)
+        {
+            NetworkObject spawnedGameObject = Runner.Spawn(foodPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
+            spawnedGameObject.transform.position = Utils.GetRandomSpawnPosition();
+        }
+
+        isFoodSpawned = true;
+    }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
@@ -17,6 +36,10 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             NetworkPlayer spawnedNetworkPlayer = runner.Spawn(playerPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity, player);
+            spawnedNetworkPlayer.NetPlayerState = NetworkPlayer.PlayerState.connected;
+
+            if (!isFoodSpawned)
+                SpawnFood();
         }
     }
 
@@ -40,9 +63,4 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
 
-    
-
-    
-
-    
 }

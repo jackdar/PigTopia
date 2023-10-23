@@ -14,6 +14,12 @@ public class MovementHandler : NetworkBehaviour
 
     public float PlayerSpeed = 2f;
 
+    private bool isFacingLeft = true;
+    private bool isFacingRight;
+    private bool isWalking;
+    private bool runSoundPlaying = false;
+    private const string IS_WALKING = "IsWalking";
+
     // Other components
     SpriteRenderer spriteRenderer;
     Rigidbody2D rigidbody2D_;
@@ -41,41 +47,52 @@ public class MovementHandler : NetworkBehaviour
         {
             Vector2 movementDirection = inputDirection;
 
-            // Keep the player within the playfield
-            if (transform.position.x < Utils.GetPlayfieldSize() / 2f * -1 + spriteRenderer.transform.localScale.x / 2f && movementDirection.x < 0)
-            {
-                movementDirection.x = 0;
-                rigidbody2D_.velocity = new Vector2(0, rigidbody2D_.velocity.y);
-            }
-
-            if (transform.position.x < Utils.GetPlayfieldSize() / 2f - spriteRenderer.transform.localScale.x / 2f && movementDirection.x < 0)
-            {
-                movementDirection.x = 0;
-                rigidbody2D_.velocity = new Vector2(0, rigidbody2D_.velocity.y);
-            }
-
-            if (transform.position.y < Utils.GetPlayfieldSize() / 2f * -1 + spriteRenderer.transform.localScale.y / 2f && movementDirection.y < 0)
-            {
-                movementDirection.y = 0;
-                rigidbody2D_.velocity = new Vector2(rigidbody2D_.velocity.x, 0);
-            }
-
-            if (transform.position.y < Utils.GetPlayfieldSize() / 2f - spriteRenderer.transform.localScale.y / 2f && movementDirection.y < 0)
-            {
-                movementDirection.y = 0;
-                rigidbody2D_.velocity = new Vector2(rigidbody2D_.velocity.x, 0);
-            }
-
             movementDirection.Normalize();
 
-            float movementSpeed = (size / Mathf.Pow(size, 1.1f)) * 2;
+            float movementSpeed = (size / Mathf.Pow(size, 1.05f)) * 3;
 
             // Push the object in a given direction
             rigidbody2D_.AddForce(movementDirection * movementSpeed, ForceMode2D.Impulse);
 
-            if (rigidbody2D_.velocity.magnitude > movementSpeed)
-                rigidbody2D_.velocity = rigidbody2D_.velocity.normalized * movementSpeed;
+            // Handle flip
+            if (inputDirection.x > 0 && isFacingLeft)
+            {
+                spriteRenderer.flipX = true;
+                isFacingLeft = false;
+                isFacingRight = true;
+            }
+
+            if (inputDirection.x < 0 && isFacingRight)
+            {
+                spriteRenderer.flipX = false;
+                isFacingLeft = true;
+                isFacingRight = false;
+            }
+
+            // Animations
+            animator.SetBool(IS_WALKING, IsWalking());
+
+            CollisionCheck();
         }
+
+        if (Object.HasInputAuthority)
+        {
+            isWalking = inputDirection != Vector2.zero;
+
+            if (isWalking && !runSoundPlaying)
+            {
+                GetComponent<NetworkPlayer>().RPC_PlayRunSound(GetComponent<NetworkPlayer>());
+                runSoundPlaying = true;
+            }
+            if (!isWalking && runSoundPlaying)
+            {
+                GetComponent<NetworkPlayer>().RPC_StopPlayingRunSound(GetComponent<NetworkPlayer>());
+                runSoundPlaying = false;
+            }
+
+            
+        }
+
     }
 
     void LateUpdate()
