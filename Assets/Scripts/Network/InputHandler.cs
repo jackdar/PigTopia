@@ -84,7 +84,6 @@ public class InputHandler : MonoBehaviour
         
         Vector2 aimDirection = mousePos - gunPos2D;
         aimAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg - 90f;
-        shotPoint.transform.eulerAngles = new Vector3(0f,0f,aimAngle);
     }
 
     public NetworkInputData GetNetworkInput()

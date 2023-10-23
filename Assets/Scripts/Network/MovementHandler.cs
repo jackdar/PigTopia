@@ -46,44 +46,12 @@ public class MovementHandler : NetworkBehaviour
         {
             Vector2 movementDirection = inputDirection;
 
-            // Keep the player within the playfield
-            // if (transform.position.x < Utils.GetPlayfieldSize() / 2f * -1 + spriteRenderer.transform.localScale.x / 2f && movementDirection.x < 0)
-            // {
-            //     movementDirection.x = 0;
-            //     rigidbody2D_.velocity = new Vector2(0, rigidbody2D_.velocity.y);
-            // }
-            //
-            // if (transform.position.x < Utils.GetPlayfieldSize() / 2f - spriteRenderer.transform.localScale.x / 2f && movementDirection.x < 0)
-            // {
-            //     movementDirection.x = 0;
-            //     rigidbody2D_.velocity = new Vector2(0, rigidbody2D_.velocity.y);
-            // }
-            //
-            // if (transform.position.y < Utils.GetPlayfieldSize() / 2f * -1 + spriteRenderer.transform.localScale.y / 2f && movementDirection.y < 0)
-            // {
-            //     movementDirection.y = 0;
-            //     rigidbody2D_.velocity = new Vector2(rigidbody2D_.velocity.x, 0);
-            // }
-            //
-            // if (transform.position.y < Utils.GetPlayfieldSize() / 2f - spriteRenderer.transform.localScale.y / 2f && movementDirection.y < 0)
-            // {
-            //     movementDirection.y = 0;
-            //     rigidbody2D_.velocity = new Vector2(rigidbody2D_.velocity.x, 0);
-            // }
-
             movementDirection.Normalize();
 
             float movementSpeed = (size / Mathf.Pow(size, 1.1f)) * 2;
 
             rigidbody2D_.velocity = movementDirection * movementSpeed;
-
-            // Push the object in a given direction
-            //rigidbody2D_.AddForce(movementDirection * 0.1f, ForceMode2D.Impulse);
-
-            //if (rigidbody2D_.velocity.magnitude > movementSpeed)
-            //    rigidbody2D_.velocity = rigidbody2D_.velocity.normalized * movementSpeed;
-
-            //rigidbody2D_.velocity = movementDirection * PlayerSpeed;
+            
         }
     }
 

@@ -8,11 +8,12 @@ public class ShootController : NetworkBehaviour
 {
     [SerializeField] private float cooldown = 0.2f;
     [SerializeField] private NetworkPrefabRef bulletPrefab = NetworkPrefabRef.Empty;
-
+    private Vector3 aimDirection;
+    
     // Local Runtime references
     private Rigidbody2D _rigidbody2D = null;
     [SerializeField] private Transform gunRotation;
-    
+
     // Game Session SPECIFIC Settings
     [Networked] private NetworkButtons _buttonsPrevious { get; set; }
     [Networked] private TickTimer ShootCooldown { get; set; }
@@ -27,6 +28,8 @@ public class ShootController : NetworkBehaviour
     {
         if (GetInput(out NetworkInputData networkInputData))
         {
+            aimDirection = networkInputData.aimDirection;
+            gunRotation.transform.eulerAngles = aimDirection;
             if (networkInputData.isFireButtonPressed)
             {
                 Fire(networkInputData);
