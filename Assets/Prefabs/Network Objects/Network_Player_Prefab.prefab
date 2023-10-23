@@ -361,12 +361,6 @@ PrefabInstance:
       addedObject: {fileID: 1424699150158393862}
     - targetCorrespondingSourceObject: {fileID: 3941658657375989170, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5720278958833207912}
-    - targetCorrespondingSourceObject: {fileID: 3941658657375989170, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4349021836797905551}
-    - targetCorrespondingSourceObject: {fileID: 3941658657375989170, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7167241630018260234}
     - targetCorrespondingSourceObject: {fileID: 3941658657375989170, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
       insertIndex: -1
@@ -380,6 +374,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3941658657375989170, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
       insertIndex: -1
       addedObject: {fileID: -6870025633278100727}
+    - targetCorrespondingSourceObject: {fileID: 3941658657375989170, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3387209519749705554}
   m_SourcePrefab: {fileID: 100100000, guid: a01c6b1d2a1cd40d392315f130add8ae, type: 3}
 --- !u!4 &3657611299452253557 stripped
 Transform:
@@ -501,30 +498,6 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortAtRoot: 0
---- !u!114 &5720278958833207912
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5304586213480738942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c67382aaf22be714ab5e64e8bd94b1cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4349021836797905551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5304586213480738942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d802274eab1c61f4db120d1086cf7a42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7167241630018260234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -540,11 +513,25 @@ MonoBehaviour:
   _interpolationDataSource: 0
   playerNickNameTM: {fileID: 2016128103734663480}
   playerSpriteRenderer: {fileID: 4084593169159722543}
+<<<<<<< Updated upstream
   _nickName:
     _length: 0
     _data:
       Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   _playerState: 0
+=======
+  _NetNickName:
+    _length: 0
+    _data:
+      Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  _NetPlayerState: 0
+  _NetSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+  _NetFoodEaten: 0
+  _NetHealth: 0
+  _NetMaxHealth: 0
+  _NetStamina: 0
+  _NetMaxStamina: 0
+>>>>>>> Stashed changes
 --- !u!114 &2198755348258370316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,6 +557,7 @@ MonoBehaviour:
   - {fileID: 7167241630018260234}
   - {fileID: 5208252318793483695}
   - {fileID: 1064826679934878942}
+  - {fileID: 3387209519749705554}
   SimulationBehaviours: []
 --- !u!114 &5208252318793483695
 MonoBehaviour:
@@ -625,3 +613,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90407e6fdac87a240a6b5b2d574d79b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3387209519749705554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5304586213480738942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  Animator: {fileID: 3408420015129500108}
+  TotalWords: 1
+  SyncSettings: 79
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 0000000048f048a75261724d083ffdf612aec71c
+  TriggerHashes: 00000000

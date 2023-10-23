@@ -51,6 +51,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  playerNickNameTM: {fileID: 0}
+  playerSpriteRenderer: {fileID: 0}
+  health: 0
+  maxHealth: 20
+  stamina: 0
+  maxStamina: 20
+  foodEaten: 0
+  _nickName:
+    _length: 0
+    _data:
+      Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  _playerState: 0
+  _spriteColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &556051905007664403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,6 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90407e6fdac87a240a6b5b2d574d79b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 0}
 --- !u!114 &1690127303511285383
 MonoBehaviour:
   m_ObjectHideFlags: 0
