@@ -40,6 +40,7 @@ public class PlayerBehaviour : NetworkBehaviour
         }
 
         wasHit = true;
+        Debug.Log("player was hit");
         despawnTimer = TickTimer.CreateFromSeconds(Runner, .2f);
     }
 
