@@ -51,11 +51,7 @@ public class InputHandler : MonoBehaviour
     {
         NetworkInputData networkInputData = new();
 
-<<<<<<< Updated upstream
-        if (!canvas.GetComponent<InGameUIHandler>().GetPauseMenuState())
-=======
         if (inGameUIHandler != null)
->>>>>>> Stashed changes
         {
             if (!inGameUIHandler.GetPauseMenuState())
             {

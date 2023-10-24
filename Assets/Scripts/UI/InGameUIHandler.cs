@@ -31,43 +31,43 @@ public class InGameUIHandler : MonoBehaviour
     [SerializeField] 
     TMP_InputField nameInputField;
 
-<<<<<<< Updated upstream
-    [Header("Canvas")]
-    [SerializeField]
-    Canvas joinGameCanvas;
-    [SerializeField]
-    Canvas cameraCanvas;
-    [SerializeField]
-    Canvas pauseGameCanvas;
-
-    public Color pigColor;
-=======
     [Header("Text")]
     [SerializeField]
     TextMeshProUGUI gameText;
     [SerializeField]
-    TextMeshProUGUI healthText;
-    [SerializeField]
-    TextMeshProUGUI staminaText;
-    [SerializeField]
     TextMeshProUGUI scoreboardText;
+
+    [Header("UI Bars")]
+    [SerializeField]
+    Canvas healthBar;
+    [SerializeField]
+    Canvas staminaBar;
 
     [Header("Canvases")]
     [SerializeField]
     Canvas joinGameCanvas;
     [SerializeField]
     Canvas pauseGameCanvas;
+    [SerializeField]
+    Canvas pauseButtonCanvas;
+    [SerializeField]
+    Canvas pauseSettingsCanvas;
     [SerializeField] 
-    Canvas scoreboardCanvas;
+    Canvas gameplayCanvas;
 
     [Header("Player List Handler")]
     [SerializeField]
     GameObject networkPlayerListHandler;
 
+    [Header("Camera")]
+    [SerializeField]
+    Camera mainCamera;
+
     public NetworkPlayerListHandler playerListHandler;
 
+    bool muteToggled = false;
+
     public Color pigColor = Color.white;
->>>>>>> Stashed changes
 
     void Start()
     {
@@ -75,11 +75,8 @@ public class InGameUIHandler : MonoBehaviour
 
         SetJoinButtonState(false);
         SetPauseMenuState(false);
-<<<<<<< Updated upstream
-=======
-        SetScoreboardState(false);
+        SetGameplayUIState(false);
         SetGameTextState(false);
->>>>>>> Stashed changes
     }
 
     public void OnJoinGame()
@@ -88,6 +85,9 @@ public class InGameUIHandler : MonoBehaviour
 
         NetworkPlayer.Local.JoinGame(nameInputField.text);
 
+        mainCamera.GetComponent<AudioListener>().enabled = false;
+        NetworkPlayer.Local.GetComponent<AudioListener>().enabled = true;
+
         pigColor = Color.white;
 
         HandleScoreboard();
@@ -95,7 +95,7 @@ public class InGameUIHandler : MonoBehaviour
         SetGameTextState(true);
 
         //Hide the join game canvas
-        gameObject.SetActive(false);
+        joinGameCanvas.gameObject.SetActive(false);
     }
 
     public void HandleScoreboard()
@@ -117,29 +117,42 @@ public class InGameUIHandler : MonoBehaviour
         else joinGameButton.GetComponentInChildren<TextMeshProUGUI>().text = "Connecting to server";
     }
 
+    public void OnRestartGame()
+    {
+        if (playerListHandler.Players.Contains(NetworkPlayer.Local))
+        {
+            playerListHandler.Players.Get(playerListHandler.Players.IndexOf(NetworkPlayer.Local)).ResetPlayer();
+            OnPauseGame();
+        }
+    }
+
     public void OnPauseGame() {
-        SetPauseMenuState(!cameraCanvas.gameObject.activeSelf);
+        SetPauseMenuState(!pauseGameCanvas.gameObject.activeSelf);
     }
 
     public bool GetPauseMenuState()
     {
-        return cameraCanvas.gameObject.activeSelf;
+        return pauseGameCanvas.gameObject.activeSelf;
     }
     
     public void SetPauseMenuState(bool isEnabled)
     {
-<<<<<<< Updated upstream
-        cameraCanvas.gameObject.SetActive(isEnabled);
-    }
-=======
         SetGameTextState(!isEnabled);
         Utils.DebugLog($"Setting pauseGameCanvas active to {isEnabled}!");
+        pauseButtonCanvas.gameObject.SetActive(isEnabled);
+        pauseSettingsCanvas.gameObject.SetActive(false);
         pauseGameCanvas.gameObject.SetActive(isEnabled);
     }
 
-    public void SetScoreboardState(bool isEnabled)
+    public void OnPauseSettingsMenu()
     {
-        scoreboardCanvas.gameObject.SetActive(isEnabled);
+        pauseButtonCanvas.gameObject.SetActive(!pauseButtonCanvas.gameObject.activeSelf);
+        pauseSettingsCanvas.gameObject.SetActive(!pauseSettingsCanvas.gameObject.activeSelf);
+    }
+
+    public void SetGameplayUIState(bool isEnabled)
+    {
+        gameplayCanvas.gameObject.SetActive(isEnabled);
     }
 
     public bool GetGameTextState()
@@ -160,15 +173,14 @@ public class InGameUIHandler : MonoBehaviour
 
     public void SetHealth(ushort health, ushort maxHealth)
     {
-        healthText.text = "Health: " + health + "/" + maxHealth;
+        // TODO
     }
 
     public void SetStamina(ushort stamina, ushort maxStamina)
     {
-        staminaText.text = "Stamina: " + stamina + "/" + maxStamina;
+        // TODO
     }
 
->>>>>>> Stashed changes
     public void OnExitGame()
     {
 #if UNITY_EDITOR
@@ -184,12 +196,23 @@ public class InGameUIHandler : MonoBehaviour
         if (color == "blue") pigColor = new Color(0.35f, 1f, 1f, 1f);
         if (color == "yellow") pigColor = new Color(0.75f, 1f, 0.15f, 1f);
     }
-
-<<<<<<< Updated upstream
-=======
+    
     void ClearGameText()
     {
         gameText.text = "";
     }
->>>>>>> Stashed changes
+
+    public void OnMuteToggled()
+    {
+        muteToggled = !muteToggled;
+        if (muteToggled)
+        {
+            AudioListener.volume = 0f;
+        }
+        else
+        {
+            AudioListener.volume = 1f;
+        }
+    }
+
 }

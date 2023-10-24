@@ -5,15 +5,19 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
+public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
 {
+    [Header("Food")]
+    [SerializeField]
+    NetworkObject foodPrefab;
+
     [Header("Player")]
     [SerializeField]
     NetworkPlayer playerPrefab;
 
     InputHandler inputHandler;
-<<<<<<< Updated upstream
-=======
+
+    private bool isFoodSpawned = false;
     
     void SpawnFood()
     {
@@ -25,7 +29,6 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         isFoodSpawned = true;
     }
->>>>>>> Stashed changes
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
@@ -34,14 +37,10 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             NetworkPlayer spawnedNetworkPlayer = runner.Spawn(playerPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity, player);
-<<<<<<< Updated upstream
-            spawnedNetworkPlayer.playerState = NetworkPlayer.PlayerState.connected;
-=======
             spawnedNetworkPlayer.NetPlayerState = NetworkPlayer.PlayerState.connected;
 
             if (!isFoodSpawned)
                 SpawnFood();
->>>>>>> Stashed changes
         }
     }
 
@@ -76,13 +75,4 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
 
-<<<<<<< Updated upstream
-    
-
-    
-
-    
-=======
-
->>>>>>> Stashed changes
 }

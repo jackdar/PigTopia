@@ -25,8 +25,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Networked(OnChanged = nameof(OnPlayerStateChanged))]
     public PlayerState NetPlayerState { get; set; }
 
-<<<<<<< Updated upstream
-=======
     [Networked(OnChanged = nameof(OnColorChanged))]
     public Color NetSpriteColor { get; set; }
 
@@ -45,15 +43,16 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Networked(OnChanged = nameof(OnMaxStaminaChanged))]
     public ushort NetMaxStamina { get; set; }
 
->>>>>>> Stashed changes
     public static NetworkPlayer Local { get; set; }
 
     // Other components
+    SettingsHandler settingsHandler;
     InGameUIHandler inGameUIHandler;
     MovementHandler movementHandler;
 
     void Awake()
     {
+        settingsHandler = FindObjectOfType<SettingsHandler>();
         inGameUIHandler = FindObjectOfType<InGameUIHandler>();
         movementHandler = GetComponent<MovementHandler>();
     }
@@ -64,7 +63,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     }
 
-<<<<<<< Updated upstream
     public override void FixedUpdateNetwork()
     {
         if (Object.HasInputAuthority && inGameUIHandler != null)
@@ -75,18 +73,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         }
     }
 
-    void ResetPlayer()
-    {
-        Vector3 newPosition = Utils.GetRandomSpawnPosition();
-
-        playerSpriteRenderer.color = inGameUIHandler.pigColor;
-=======
     public void ResetPlayer()
     {
         Vector3 newPosition = Utils.GetRandomSpawnPosition();
 
         if (Object.HasInputAuthority)
-            inGameUIHandler.SetScoreboardState(true);
+            inGameUIHandler.SetGameplayUIState(true);
 
         NetMaxHealth = 20;
         NetMaxStamina = 20;
@@ -96,7 +88,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         NetFoodEaten = 0;
 
         movementHandler.Reset();
->>>>>>> Stashed changes
 
         // Teleport player to new position
         GetComponent<NetworkRigidbody2D>().TeleportToPosition(newPosition);
@@ -107,7 +98,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public override void Spawned()
     {
         Utils.DebugLog($"Player spawned, has input auth {Object.HasInputAuthority}");
-
+        
         if (Object.HasInputAuthority)
         {
             Local = this;
@@ -124,14 +115,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public void PlayerLeft(PlayerRef player)
     {
         if (player == Object.InputAuthority)
-<<<<<<< Updated upstream
-            Runner.Despawn(Object);
-=======
         {
             inGameUIHandler.playerListHandler.Players.Remove(this);
             Runner.Despawn(Object);
         }
->>>>>>> Stashed changes
     }
 
     // Player nickname OnChanged
@@ -163,7 +150,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             if (Object.HasInputAuthority)
             {
                 Camera.main.transform.position = transform.position;
-                inGameUIHandler.SetScoreboardState(true);
+                inGameUIHandler.SetGameplayUIState(true);
             }
             
             playerSpriteRenderer.gameObject.SetActive(true);
@@ -176,8 +163,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         }
     }
 
-<<<<<<< Updated upstream
-=======
     public static void OnColorChanged(Changed<NetworkPlayer> changed)
     {
         changed.Behaviour.playerSpriteRenderer.color = changed.Behaviour.NetSpriteColor;
@@ -236,7 +221,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         inGameUIHandler.SetStamina(NetStamina, NetMaxStamina);
     }
 
->>>>>>> Stashed changes
     public void JoinGame(string nickName)
     {
         RPC_JoinGame(nickName);
@@ -247,19 +231,13 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         Utils.DebugLog($"[RPC] RPC_JoinGame {nickName}");
 
-<<<<<<< Updated upstream
-        this.nickName = nickName;
-=======
         this.NetNickName = nickName;
         NetSpriteColor = inGameUIHandler.pigColor;
         inGameUIHandler.playerListHandler.Players.Add(this);
->>>>>>> Stashed changes
 
         ResetPlayer();
     }
 
-<<<<<<< Updated upstream
-=======
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
     public void RPC_SendSizeMessage(string playerName, RpcInfo info = default)
     {
@@ -271,5 +249,25 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             inGameUIHandler.SetGameText($"{playerName} has reached maximum size!", 10f);
     }
 
->>>>>>> Stashed changes
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_PlayRunSound(NetworkPlayer player, RpcInfo info = default)
+    {
+        Utils.DebugLog($"[RPC] RPC_PlayRunSound");
+
+        if (info.IsInvokeLocal)
+            GetComponent<AudioSource>().Play();
+        else
+            player.GetComponent<AudioSource>().Play();
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_StopPlayingRunSound(NetworkPlayer player, RpcInfo info = default)
+    {
+        Utils.DebugLog($"[RPC] RPC_StopPlayingRunSound");
+
+        if (info.IsInvokeLocal)
+            GetComponent<AudioSource>().Stop();
+        else
+            player.GetComponent<AudioSource>().Stop();
+    }
 }

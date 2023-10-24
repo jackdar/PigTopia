@@ -8,30 +8,35 @@ public class MovementHandler : NetworkBehaviour
     Vector2 inputDirection = Vector2.zero;
 
     [Networked(OnChanged = nameof(OnSizeChanged))]
-    ushort size { get; set; } // Max 65,535
+    ushort NetSize { get; set; } // Max 65,535
+
+    [Networked(OnChanged = nameof(OnCharacterFlip))]
+    bool NetIsFlipped { get; set; }
 
     private CharacterController _controller;
+
+    private NetworkPlayer player;
 
     public float PlayerSpeed = 2f;
 
     private bool isFacingLeft = true;
     private bool isFacingRight;
-    private bool isWalking;
-    private const string IS_WALKING = "IsWalking";
+    private bool isWalking = false;
+    public bool runSoundPlaying = false;
 
     // Other components
     SpriteRenderer spriteRenderer;
     Rigidbody2D rigidbody2D_;
     BoxCollider2D boxCollider2D;
-    Animator animator;
-
+    NetworkMecanimAnimator networkAnimator;
 
     void Awake()
     {
-        animator = GetComponent<NetworkMecanimAnimator>().GetComponent<Animator>();
+        player = GetComponent<NetworkPlayer>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         rigidbody2D_ = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponentInChildren<BoxCollider2D>();
+        networkAnimator = GetComponent<NetworkMecanimAnimator>();
     }
 
     // Start is called before the first frame update
@@ -44,9 +49,14 @@ public class MovementHandler : NetworkBehaviour
         UpdateSize();
     }
 
-    public bool IsWalking()
+    static void OnCharacterFlip(Changed<MovementHandler> changed)
     {
-        return isWalking;
+        changed.Behaviour.OnCharacterFlip();
+    }
+
+    void OnCharacterFlip()
+    {
+        spriteRenderer.flipX = !spriteRenderer.flipX;
     }
 
     public override void FixedUpdateNetwork()
@@ -54,6 +64,14 @@ public class MovementHandler : NetworkBehaviour
         if (GetInput(out NetworkInputData networkInputData))
         {
             inputDirection = networkInputData.movementInput;
+
+            isWalking = inputDirection != Vector2.zero;
+
+            // Animations
+            if (isWalking)
+                networkAnimator.Animator.SetTrigger("Walk");
+            else
+                networkAnimator.Animator.SetTrigger("Idle");
         }
 
         // Server moves the network objects
@@ -61,66 +79,45 @@ public class MovementHandler : NetworkBehaviour
         {
             Vector2 movementDirection = inputDirection;
 
-<<<<<<< Updated upstream
-            // Keep the player within the playfield
-            // if (transform.position.x < Utils.GetPlayfieldSize() / 2f * -1 + spriteRenderer.transform.localScale.x / 2f && movementDirection.x < 0)
-            // {
-            //     movementDirection.x = 0;
-            //     rigidbody2D_.velocity = new Vector2(0, rigidbody2D_.velocity.y);
-            // }
-            //
-            // if (transform.position.x < Utils.GetPlayfieldSize() / 2f - spriteRenderer.transform.localScale.x / 2f && movementDirection.x < 0)
-            // {
-            //     movementDirection.x = 0;
-            //     rigidbody2D_.velocity = new Vector2(0, rigidbody2D_.velocity.y);
-            // }
-            //
-            // if (transform.position.y < Utils.GetPlayfieldSize() / 2f * -1 + spriteRenderer.transform.localScale.y / 2f && movementDirection.y < 0)
-            // {
-            //     movementDirection.y = 0;
-            //     rigidbody2D_.velocity = new Vector2(rigidbody2D_.velocity.x, 0);
-            // }
-            //
-            // if (transform.position.y < Utils.GetPlayfieldSize() / 2f - spriteRenderer.transform.localScale.y / 2f && movementDirection.y < 0)
-            // {
-            //     movementDirection.y = 0;
-            //     rigidbody2D_.velocity = new Vector2(rigidbody2D_.velocity.x, 0);
-            // }
-
             movementDirection.Normalize();
 
-            float movementSpeed = (size / Mathf.Pow(size, 1.1f)) * 2;
-=======
-            float movementSpeed = (size / Mathf.Pow(size, 1.05f)) * 3;
->>>>>>> Stashed changes
+            float movementSpeed = (NetSize / Mathf.Pow(NetSize, 1.05f)) * 3;
 
             rigidbody2D_.velocity = movementDirection * movementSpeed;
+
+            // Handle flip
+            if (inputDirection.x > 0 && isFacingLeft)
+            {
+                NetIsFlipped = true;
+                isFacingLeft = false;
+                isFacingRight = true;
+            }
+
+            if (inputDirection.x < 0 && isFacingRight)
+            {
+                NetIsFlipped = false;
+                isFacingLeft = true;
+                isFacingRight = false;
+            }
 
             CollisionCheck();
         }
 
         if (Object.HasInputAuthority)
         {
-            isWalking = inputDirection != Vector2.zero;
-        }
+            // SFX
+            if (isWalking && !runSoundPlaying)
+            {
+                GetComponent<NetworkPlayer>().RPC_PlayRunSound(GetComponent<NetworkPlayer>());
+                runSoundPlaying = true;
+            }
 
-        // Handle flip
-        if (inputDirection.x > 0 && isFacingLeft)
-        {
-            spriteRenderer.flipX = true;
-            isFacingLeft = false;
-            isFacingRight = true;
+            if (!isWalking && runSoundPlaying)
+            {
+                GetComponent<NetworkPlayer>().RPC_StopPlayingRunSound(GetComponent<NetworkPlayer>());
+                runSoundPlaying = false;
+            }
         }
-
-        if (inputDirection.x < 0 && isFacingRight)
-        {
-            spriteRenderer.flipX = false;
-            isFacingLeft = true;
-            isFacingRight = false;
-        }
-
-        // Animations
-        animator.SetBool(IS_WALKING, IsWalking());
     }
 
     void LateUpdate()
@@ -133,7 +130,7 @@ public class MovementHandler : NetworkBehaviour
 
     public void Reset()
     {
-        size = 1;
+        NetSize = 1;
     }
 
     void CollisionCheck()
@@ -160,19 +157,19 @@ public class MovementHandler : NetworkBehaviour
 
     void UpdateSize()
     {
-        spriteRenderer.transform.localScale = Vector3.one + Vector3.one * 100 * (size / 65535f);
+        spriteRenderer.transform.localScale = Vector3.one + Vector3.one * 100 * (NetSize / 65535f);
     }
 
     void OnCollectFood(ushort growSize)
     {
-        size += growSize;
+        NetSize += growSize;
 
         GetComponent<NetworkPlayer>().NetFoodEaten++;
 
         if (GetComponent<NetworkPlayer>().NetFoodEaten < 100)
         {
             UpdateSize();
-            //Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Camera.main.orthographicSize + 8, Time.deltaTime);
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Camera.main.orthographicSize + 7, Time.deltaTime);
         }
     }
 
