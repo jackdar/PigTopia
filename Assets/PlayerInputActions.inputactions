@@ -24,13 +24,13 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Fire",
+                    "name": "Sprint",
                     "type": "Button",
-                    "id": "0d11d1ad-5289-4e9d-b750-f054d7767f73",
+                    "id": "b78f8322-8959-4179-8267-17ba44a8757e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -157,12 +157,12 @@
                 },
                 {
                     "name": "",
-                    "id": "a5f7f82a-3242-487b-8856-c391779531f8",
-                    "path": "<Keyboard>/space",
+                    "id": "13593efe-1e41-4fab-989b-d86ef0a4f66b",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Fire",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

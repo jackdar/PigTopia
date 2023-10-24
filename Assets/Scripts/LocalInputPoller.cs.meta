@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/LocalInputPoller.cs.meta
 guid: 05744b78db0604921b1efff782be29b5
+========
+guid: 1ff915a63039b48b488060d73fab079e
+>>>>>>>> multiplayer:Assets/Scripts/Network/NetworkPlayerListHandler.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

@@ -11,7 +11,11 @@ public class MovementHandler : NetworkBehaviour
     ushort NetSize { get; set; } // Max 65,535
 
     [Networked(OnChanged = nameof(OnCharacterFlip))]
+<<<<<<< HEAD
     NetworkBool NetIsFlipped { get; set; }
+=======
+    bool NetIsFlipped { get; set; }
+>>>>>>> multiplayer
 
     private CharacterController _controller;
 

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/Projectiles.meta
 guid: 285c97db304a9462ab12d69cb9f78268
+========
+guid: 15e6aba61bb5546538e4381e9574c740
+>>>>>>>> multiplayer:Assets/Resources.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

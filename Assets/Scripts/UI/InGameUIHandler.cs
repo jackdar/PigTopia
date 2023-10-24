@@ -69,8 +69,11 @@ public class InGameUIHandler : MonoBehaviour
 
     public Color pigColor = Color.white;
 
+<<<<<<< HEAD
     private string _nickName = null;
     
+=======
+>>>>>>> multiplayer
     void Start()
     {
         playerListHandler = networkPlayerListHandler.GetComponent<NetworkPlayerListHandler>();
@@ -96,8 +99,11 @@ public class InGameUIHandler : MonoBehaviour
 
         SetGameTextState(true);
 
+<<<<<<< HEAD
         SetNickName(nameInputField.text);
         
+=======
+>>>>>>> multiplayer
         //Hide the join game canvas
         joinGameCanvas.gameObject.SetActive(false);
     }
@@ -123,9 +129,16 @@ public class InGameUIHandler : MonoBehaviour
 
     public void OnRestartGame()
     {
+<<<<<<< HEAD
         if (GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkPlayer>().HasInputAuthority)
         {
             GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkPlayer>().ResetPlayer();
+=======
+        if (playerListHandler.Players.Contains(NetworkPlayer.Local))
+        {
+            playerListHandler.Players.Get(playerListHandler.Players.IndexOf(NetworkPlayer.Local)).ResetPlayer();
+            OnPauseGame();
+>>>>>>> multiplayer
         }
     }
 
@@ -176,14 +189,22 @@ public class InGameUIHandler : MonoBehaviour
 
     public void SetHealth(ushort health, ushort maxHealth)
     {
+<<<<<<< HEAD
         healthBar.GetComponent<Slider>().maxValue = maxHealth;
         healthBar.GetComponent<Slider>().value = health;
+=======
+        // TODO
+>>>>>>> multiplayer
     }
 
     public void SetStamina(ushort stamina, ushort maxStamina)
     {
+<<<<<<< HEAD
         staminaBar.GetComponent<Slider>().maxValue = maxStamina;
         staminaBar.GetComponent<Slider>().value = stamina;
+=======
+        // TODO
+>>>>>>> multiplayer
     }
 
     public void OnExitGame()
@@ -220,6 +241,7 @@ public class InGameUIHandler : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
     public void SetNickName(string nickName)
     {
         _nickName = nickName;
@@ -234,4 +256,6 @@ public class InGameUIHandler : MonoBehaviour
 
         return _nickName;
     }
+=======
+>>>>>>> multiplayer
 }
