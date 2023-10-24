@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using Fusion;
+using TMPro;
+using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
@@ -99,6 +102,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         if (Object.HasInputAuthority)
         {
             Local = this;
+            inGameUIHandler.SetJoinButtonState(true);
         }
 
         // Set the Player as player object
@@ -107,7 +111,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         // Make it easier to tell which player is which
         transform.name = $"P_{Object.Id}";
     }
-
 
     public void PlayerLeft(PlayerRef player)
     {

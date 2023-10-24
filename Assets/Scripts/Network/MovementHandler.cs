@@ -23,11 +23,16 @@ public class MovementHandler : NetworkBehaviour
     // Other components
     SpriteRenderer spriteRenderer;
     Rigidbody2D rigidbody2D_;
+    BoxCollider2D boxCollider2D;
+    Animator animator;
+
 
     void Awake()
     {
+        animator = GetComponent<NetworkMecanimAnimator>().GetComponent<Animator>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         rigidbody2D_ = GetComponent<Rigidbody2D>();
+        boxCollider2D = GetComponentInChildren<BoxCollider2D>();
     }
 
     // Start is called before the first frame update
@@ -40,8 +45,18 @@ public class MovementHandler : NetworkBehaviour
         UpdateSize();
     }
 
+    public bool IsWalking()
+    {
+        return isWalking;
+    }
+
     public override void FixedUpdateNetwork()
     {
+        if (GetInput(out NetworkInputData networkInputData))
+        {
+            inputDirection = networkInputData.movementInput;
+        }
+
         // Server moves the network objects
         if (Object.HasStateAuthority)
         {
@@ -51,8 +66,7 @@ public class MovementHandler : NetworkBehaviour
 
             float movementSpeed = (size / Mathf.Pow(size, 1.05f)) * 3;
 
-            // Push the object in a given direction
-            rigidbody2D_.AddForce(movementDirection * movementSpeed, ForceMode2D.Impulse);
+            rigidbody2D_.velocity = movementDirection * movementSpeed;
 
             // Handle flip
             if (inputDirection.x > 0 && isFacingLeft)
@@ -99,10 +113,6 @@ public class MovementHandler : NetworkBehaviour
     {
         if (Object.HasInputAuthority)
         {
-            float aspectRatio = Camera.main.aspect;
-            float orthoSize = (spriteRenderer.transform.localScale.x + 7) / aspectRatio;
-
-            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, orthoSize, Time.deltaTime * 0.1f);
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(spriteRenderer.transform.position.x, spriteRenderer.transform.position.y, -10), Time.deltaTime);
         }
     }
@@ -112,9 +122,44 @@ public class MovementHandler : NetworkBehaviour
         size = 1;
     }
 
+    void CollisionCheck()
+    {
+        // Disable own collider so we don't detect player self
+        boxCollider2D.enabled = false;
+
+        Collider2D hitCollider = Runner.GetPhysicsScene2D().OverlapCircle(spriteRenderer.transform.position, (spriteRenderer.transform.localScale.x / 2f) * 0.8f);
+
+        // Enable own collider again so others can hit us
+        boxCollider2D.enabled = true;
+
+        if (hitCollider != null)
+        {
+            if (hitCollider.CompareTag("Food"))
+            {
+                // Move food to new location
+                hitCollider.transform.position = Utils.GetRandomSpawnPosition();
+
+                OnCollectFood(25);
+            }
+        }
+    }
+
     void UpdateSize()
     {
         spriteRenderer.transform.localScale = Vector3.one + Vector3.one * 100 * (size / 65535f);
+    }
+
+    void OnCollectFood(ushort growSize)
+    {
+        size += growSize;
+
+        GetComponent<NetworkPlayer>().NetFoodEaten++;
+
+        if (GetComponent<NetworkPlayer>().NetFoodEaten < 100)
+        {
+            UpdateSize();
+            //Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Camera.main.orthographicSize + 8, Time.deltaTime);
+        }
     }
 
     public static void OnSizeChanged(Changed<MovementHandler> changed)

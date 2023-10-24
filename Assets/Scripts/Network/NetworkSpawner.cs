@@ -2,6 +2,7 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
@@ -45,11 +46,22 @@ public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+        if (inputHandler == null && NetworkPlayer.Local != null)
+        {
+            inputHandler = NetworkPlayer.Local.GetComponent<InputHandler>();
+        }
+        if (inputHandler != null)
+        {
+            input.Set(inputHandler.GetNetworkInput());
+        }
+    }
 
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    {
+        Utils.DebugLog("OnPlayerLeft");
     }
 
     public void OnConnectedToServer(NetworkRunner runner) { Utils.DebugLog("OnConnectedToServer"); }
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { Utils.DebugLog("OnPlayerLeft"); }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { Utils.DebugLog("OnShutdown"); }
     public void OnDisconnectedFromServer(NetworkRunner runner) { Utils.DebugLog("OnDisconnectFromServer"); }

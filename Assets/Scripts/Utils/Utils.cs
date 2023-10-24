@@ -11,12 +11,16 @@ public static class Utils
 
     public static Vector3 GetRandomSpawnPosition()
     {
-        return new Vector3(Random.Range(-GetPlayfieldSize() / 2f, GetPlayfieldSize() / 2f), Random.Range(-GetPlayfieldSize() / 2f, GetPlayfieldSize() / 2f), 0) * 0.9f;
+        float playfieldSize_x = 4.7f;
+        float playfieldSize_y = 4.6f;
+        float scale_x = 5.5f;
+        float scale_y = 3.6f;
+        return new Vector3(Random.Range(-playfieldSize_x, playfieldSize_x) * scale_x, Random.Range(-playfieldSize_y, playfieldSize_y) * scale_y, 0) * 0.9f;
     }
 
     public static float GetPlayfieldSize()
     {
-        return 5;
+        return 4;
     }
 
     public static string getRandomName()
