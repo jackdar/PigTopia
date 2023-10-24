@@ -15,13 +15,14 @@ public class PlayerBehaviour : NetworkBehaviour
     [Networked] private TickTimer despawnTimer { get; set; }
 
     private NetworkTransform _networkTransform;
-
+    private NetworkPlayer networkPlayer;
     public bool IsAlive => !wasHit;
 
     public override void Spawned()
     {
         _networkTransform = GetComponent<NetworkTransform>();
         _networkTransform.InterpolationTarget.localScale = Vector3.one;
+        networkPlayer = GetComponent<NetworkPlayer>();
     }
     
     // When player is hit by another object, method is called to decide next action taken
@@ -34,7 +35,7 @@ public class PlayerBehaviour : NetworkBehaviour
         
         // If hit was triggered by a projectile, player who shot gets points
         // Player object is retrieved via the Runner
-        if (Runner.TryGetPlayerObject(player, out var playerNetworkObject))
+        if (Runner.TryGetPlayerObject(player, out var playerNetworkObject) && networkPlayer.NetHealth <= 0f)
         {
             playerNetworkObject.GetComponent<PlayerNetworkedData>().AddToScore(points);
         }
@@ -46,7 +47,13 @@ public class PlayerBehaviour : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (Object.HasStateAuthority && wasHit && despawnTimer.Expired(Runner))
+        if (wasHit && networkPlayer.NetHealth > 0f)
+        {
+            networkPlayer.decreaseHealth(2f);
+            wasHit = false;
+        }
+        
+        if (Object.HasStateAuthority && despawnTimer.Expired(Runner) && networkPlayer.NetHealth <= 0f)
         {
             wasHit = false;
             despawnTimer = TickTimer.None;
