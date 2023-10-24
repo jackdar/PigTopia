@@ -26,7 +26,7 @@ public class GrenadeHandler : NetworkBehaviour
         _networkRigidbody2D.Rigidbody.AddForce(throwForce, ForceMode2D.Impulse);
 
         this.thrownByPlayerRef = thrownPlayerRef;
-        this.thrownByPlayerName = thrownByPlayerName;
+        this.thrownByPlayerName = thrownPlayerName;
 
         explodeTickTimer = TickTimer.CreateFromSeconds(Runner, 2);
     }

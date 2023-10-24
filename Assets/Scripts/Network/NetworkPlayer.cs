@@ -102,10 +102,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         if (Object.HasInputAuthority)
         {
             Local = this;
-<<<<<<< HEAD
             tag = "LocalPlayer";
-=======
->>>>>>> multiplayer
             inGameUIHandler.SetJoinButtonState(true);
         }
 

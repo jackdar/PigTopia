@@ -18,14 +18,6 @@ public class PlayerNetworkedData : NetworkBehaviour
 
     public override void Spawned()
     {
-        // Client
-        // Find local PlayerDaya to read and communicate to host VIA RPC
-        if (Object.HasInputAuthority)
-        {
-            var nickName = FindObjectOfType<InGameUIHandler>().GetNickName();
-            RpcSetNickName(nickName);
-        }
-        
         // Host
         if (Object.HasStateAuthority)
         {
