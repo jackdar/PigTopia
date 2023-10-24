@@ -98,7 +98,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public override void Spawned()
     {
         Utils.DebugLog($"Player spawned, has input auth {Object.HasInputAuthority}");
-
+        
         if (Object.HasInputAuthority)
         {
             Local = this;

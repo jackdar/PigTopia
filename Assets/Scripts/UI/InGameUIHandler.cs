@@ -59,6 +59,10 @@ public class InGameUIHandler : MonoBehaviour
     [SerializeField]
     GameObject networkPlayerListHandler;
 
+    [Header("Camera")]
+    [SerializeField]
+    Camera mainCamera;
+
     public NetworkPlayerListHandler playerListHandler;
 
     bool muteToggled = false;
@@ -75,13 +79,14 @@ public class InGameUIHandler : MonoBehaviour
         SetGameTextState(false);
     }
 
-    
-
     public void OnJoinGame()
     {
         Utils.DebugLog("OnJoinGame clicked");
 
         NetworkPlayer.Local.JoinGame(nameInputField.text);
+
+        mainCamera.GetComponent<AudioListener>().enabled = false;
+        NetworkPlayer.Local.GetComponent<AudioListener>().enabled = true;
 
         pigColor = Color.white;
 
