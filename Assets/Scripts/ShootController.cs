@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ShootController : NetworkBehaviour
 {
@@ -12,7 +13,7 @@ public class ShootController : NetworkBehaviour
     
     // Local Runtime references
     private Rigidbody2D _rigidbody2D = null;
-    [SerializeField] private Transform gunRotation;
+    [SerializeField] private Transform gunShotPoint;
 
     // Game Session SPECIFIC Settings
     [Networked] private NetworkButtons _buttonsPrevious { get; set; }
@@ -29,7 +30,7 @@ public class ShootController : NetworkBehaviour
         if (GetInput(out NetworkInputData networkInputData))
         {
             aimDirection = networkInputData.aimDirection;
-            gunRotation.transform.eulerAngles = aimDirection;
+            gunShotPoint.transform.eulerAngles = aimDirection;
             if (networkInputData.isFireButtonPressed)
             {
                 Fire(networkInputData);
@@ -56,8 +57,8 @@ public class ShootController : NetworkBehaviour
     {
         if (ShootCooldown.ExpiredOrNotRunning(Runner) == false) return;
 
-        var position = _rigidbody2D.position;
-        Runner.Spawn(bulletPrefab, new Vector3(position.x, position.y, 0f), gunRotation.rotation, Object.InputAuthority);
+        var position = gunShotPoint.position;
+        Runner.Spawn(bulletPrefab, new Vector3(position.x, position.y, 0f), gunShotPoint.rotation, Object.InputAuthority);
 
         
         ShootCooldown = TickTimer.CreateFromSeconds(Runner, cooldown);
