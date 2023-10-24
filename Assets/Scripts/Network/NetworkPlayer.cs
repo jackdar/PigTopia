@@ -52,7 +52,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         }
     }
 
-    void ResetPlayer()
+    public void ResetPlayer()
     {
         Vector3 newPosition = Utils.GetRandomSpawnPosition();
 

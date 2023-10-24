@@ -58,6 +58,7 @@ public class BulletBehaviour : NetworkBehaviour
         
         Debug.Log("Projectile Owner: " + Object.InputAuthority);
         
+        // Detects collision with objects
         if (hitCollider.collider != null)
         {
             LayerMask hitLayer = hitCollider.collider.gameObject.layer;
@@ -65,27 +66,31 @@ public class BulletBehaviour : NetworkBehaviour
             {
                 if (hitCollider.collider.GetType() != tempTree.GetType())
                 {
-                    Debug.Log("Obstacle was hit");
                     return true; 
                 }
-                
             }
 
-            
+            // Checks for player hit
             if (LayerMask.LayerToName(hitLayer) == "Player")
             {
-                PlayerRef hitPlayerIA = hitCollider.collider.gameObject.GetComponent<NetworkObject>().InputAuthority;
+                GameObject playerHit = hitCollider.collider.gameObject;
+                PlayerRef hitPlayerIA = playerHit.GetComponent<NetworkObject>().InputAuthority;
                 PlayerRef currentPlayerIA = Object.InputAuthority;
+                // Ensures player can't hurt self
                 if(currentPlayerIA == hitPlayerIA)
                 {
-                    Debug.Log("Cannot hurt self");
                     return false;
                 }
-            
-                Debug.Log("Other Player Hit");
+                
+
+                var playerBehaviour = playerHit.GetComponent<PlayerBehaviour>();
+
+                if (playerBehaviour.IsAlive == false)
+                {
+                    return false;
+                }
+                playerBehaviour.HitPlayer(Object.InputAuthority);
                 return true;
-            
-            
             }
 
         }

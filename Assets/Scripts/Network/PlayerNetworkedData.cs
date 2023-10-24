@@ -12,7 +12,7 @@ public class PlayerNetworkedData : NetworkBehaviour
     [Networked(OnChanged = nameof(OnLivesChanged))]
     public int Lives { get; private set; }
     
-    [HideInInspector]
+    // [HideInInspector]
     [Networked(OnChanged = nameof(OnScoreChanged))]
     public int Score { get; private set; }
 

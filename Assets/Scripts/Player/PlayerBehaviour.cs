@@ -51,7 +51,8 @@ public class PlayerBehaviour : NetworkBehaviour
             wasHit = false;
             despawnTimer = TickTimer.None;
             
-            Runner.Despawn(Object);
+            // Runner.Despawn(Object);
+            Object.GetComponent<NetworkPlayer>().ResetPlayer();
         }
     }
 
