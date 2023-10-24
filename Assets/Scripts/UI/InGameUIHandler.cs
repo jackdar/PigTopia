@@ -69,6 +69,8 @@ public class InGameUIHandler : MonoBehaviour
 
     public Color pigColor = Color.white;
 
+    private string _nickName = null;
+    
     void Start()
     {
         playerListHandler = networkPlayerListHandler.GetComponent<NetworkPlayerListHandler>();
@@ -94,6 +96,8 @@ public class InGameUIHandler : MonoBehaviour
 
         SetGameTextState(true);
 
+        SetNickName(nameInputField.text);
+        
         //Hide the join game canvas
         joinGameCanvas.gameObject.SetActive(false);
     }
@@ -215,4 +219,18 @@ public class InGameUIHandler : MonoBehaviour
         }
     }
 
+    public void SetNickName(string nickName)
+    {
+        _nickName = nickName;
+    }
+    
+    public string GetNickName()
+    {
+        if (string.IsNullOrWhiteSpace(_nickName))
+        {
+            _nickName = "Test Data";
+        }
+
+        return _nickName;
+    }
 }
