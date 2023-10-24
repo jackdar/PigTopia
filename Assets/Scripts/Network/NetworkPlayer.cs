@@ -59,7 +59,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         {
             TakeDamage(1);
         }
-        else if(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        else if(Input.GetKeyDown(KeyCode.LeftShift))
         {
             getTired(1);
         }
@@ -77,17 +77,31 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     void getTired(float tired)
     {
-        if (currentStamina != 0)
+        if (staminabar != null)
         {
-            currentStamina -= tired;
-            staminabar.SetStamina(currentStamina);
+            if (currentStamina != 0)
+            {
+                currentStamina -= tired;
+                staminabar.SetStamina(currentStamina);
+            }
+        }
+        else
+        {
+            Debug.LogError("staminabar is null");
         }
     }
 
     void getStamina(float booster)
     {
-        currentStamina += booster * Time.deltaTime;
-        staminabar.SetStamina(currentStamina);
+        if (staminabar != null)
+        {
+            currentStamina += booster * Time.deltaTime;
+            staminabar.SetStamina(currentStamina);
+        }
+        else
+        {
+            Debug.LogError("staminabar is null");
+        }
     }
 
     public override void FixedUpdateNetwork()

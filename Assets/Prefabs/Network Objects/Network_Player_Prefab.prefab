@@ -1158,7 +1158,7 @@ MonoBehaviour:
   healthbar: {fileID: 5248379128596266034}
   maxHealth: 3
   currentHealth: 0
-  staminabar: {fileID: 0}
+  staminabar: {fileID: 4036937694940674171}
   maxStamina: 3
   currentStamina: 0
   _nickName:
