@@ -119,9 +119,9 @@ public class InGameUIHandler : MonoBehaviour
 
     public void OnRestartGame()
     {
-        if (NetworkPlayer.Local.HasInputAuthority)
+        if (playerListHandler.Players.Contains(NetworkPlayer.Local))
         {
-            NetworkPlayer.Local.ResetPlayer();
+            playerListHandler.Players.Get(playerListHandler.Players.IndexOf(NetworkPlayer.Local)).ResetPlayer();
             OnPauseGame();
         }
     }
