@@ -32,16 +32,16 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public ushort NetFoodEaten { get; set; }
 
     [Networked(OnChanged = nameof(OnHealthChanged))]
-    public ushort NetHealth { get; set; }
+    public float NetHealth { get; set; }
 
     [Networked(OnChanged = nameof(OnMaxHealthChanged))]
-    public ushort NetMaxHealth { get; set; }
+    public float NetMaxHealth { get; set; }
 
     [Networked(OnChanged = nameof(OnStaminaChanged))]
-    public ushort NetStamina { get; set; }
+    public float NetStamina { get; set; }
 
     [Networked(OnChanged = nameof(OnMaxStaminaChanged))]
-    public ushort NetMaxStamina { get; set; }
+    public float NetMaxStamina { get; set; }
 
     public static NetworkPlayer Local { get; set; }
 
@@ -80,8 +80,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         if (Object.HasInputAuthority)
             inGameUIHandler.SetGameplayUIState(true);
 
-        NetMaxHealth = 20;
-        NetMaxStamina = 20;
+        NetMaxHealth = 20f;
+        NetMaxStamina = 20f;
 
         NetHealth = NetMaxHealth;
         NetStamina = NetMaxStamina;
@@ -116,6 +116,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         if (player == Object.InputAuthority)
         {
+            inGameUIHandler.mainCamera.GetComponent<AudioListener>().enabled = true;
             inGameUIHandler.playerListHandler.Players.Remove(this);
             Runner.Despawn(Object);
         }
@@ -178,8 +179,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     void OnFoodEatenChanged()
     {
-        if (NetHealth < NetMaxHealth) NetHealth += 1;
-        if (NetStamina < NetMaxStamina) NetStamina += 1;
+        if (NetHealth < NetMaxHealth) NetHealth += 50;
 
         if (NetFoodEaten == 100 && Object.HasInputAuthority)
         {

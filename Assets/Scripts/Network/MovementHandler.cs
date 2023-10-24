@@ -11,17 +11,22 @@ public class MovementHandler : NetworkBehaviour
     ushort NetSize { get; set; } // Max 65,535
 
     [Networked(OnChanged = nameof(OnCharacterFlip))]
-    bool NetIsFlipped { get; set; }
+    NetworkBool NetIsFlipped { get; set; }
+
+    //[Networked(OnChanged = nameof(OnCharacterSprint))]
+    //NetworkBool NetIsSprinting { get; set; }
 
     private CharacterController _controller;
 
     private NetworkPlayer player;
 
-    public float PlayerSpeed = 2f;
+    private float playerSpeed = 3f;
+    private float playerSprintSpeed = 5f;
 
     private bool isFacingLeft = true;
     private bool isFacingRight;
     private bool isWalking = false;
+    private bool isSprinting = false;
     public bool runSoundPlaying = false;
 
     // Other components
@@ -29,6 +34,7 @@ public class MovementHandler : NetworkBehaviour
     Rigidbody2D rigidbody2D_;
     BoxCollider2D boxCollider2D;
     NetworkMecanimAnimator networkAnimator;
+    PlayerInputActions playerInputActions;
 
     void Awake()
     {
@@ -37,6 +43,9 @@ public class MovementHandler : NetworkBehaviour
         rigidbody2D_ = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponentInChildren<BoxCollider2D>();
         networkAnimator = GetComponent<NetworkMecanimAnimator>();
+
+        playerInputActions = new PlayerInputActions();
+        playerInputActions.Player.Enable();
     }
 
     // Start is called before the first frame update
@@ -49,6 +58,16 @@ public class MovementHandler : NetworkBehaviour
         UpdateSize();
     }
 
+    //static void OnCharacterSprint(Changed<MovementHandler> changed)
+    //{
+    //    changed.Behaviour.OnCharacterSprint();
+    //}
+
+    //void OnCharacterSprint()
+    //{
+
+    //}
+
     static void OnCharacterFlip(Changed<MovementHandler> changed)
     {
         changed.Behaviour.OnCharacterFlip();
@@ -59,11 +78,34 @@ public class MovementHandler : NetworkBehaviour
         spriteRenderer.flipX = !spriteRenderer.flipX;
     }
 
+    private void SprintPressed()
+    {
+        if (player.NetStamina > 5f)
+        {
+            isSprinting = true;
+        }
+    }
+
+    private void SprintReleased()
+    {
+        isSprinting = false;
+    }
+
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputData networkInputData))
         {
             inputDirection = networkInputData.movementInput;
+            
+            if (isSprinting && player.NetStamina > 0)
+                player.NetStamina -= 50f * Time.deltaTime;
+            if (player.NetStamina == 0)
+                SprintReleased();
+            if (!isSprinting && (player.NetStamina <= player.NetMaxStamina))
+                player.NetStamina += 10f * Time.deltaTime;
+
+            playerInputActions.Player.SprintStart.performed += x => SprintPressed();
+            playerInputActions.Player.SprintFinish.performed += x => SprintReleased();
 
             isWalking = inputDirection != Vector2.zero;
 
@@ -81,7 +123,7 @@ public class MovementHandler : NetworkBehaviour
 
             movementDirection.Normalize();
 
-            float movementSpeed = (NetSize / Mathf.Pow(NetSize, 1.05f)) * 3;
+            float movementSpeed = (NetSize / Mathf.Pow(NetSize, 1.05f)) * (isSprinting ? playerSprintSpeed : playerSpeed);
 
             rigidbody2D_.velocity = movementDirection * movementSpeed;
 
@@ -124,7 +166,11 @@ public class MovementHandler : NetworkBehaviour
     {
         if (Object.HasInputAuthority)
         {
-            Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, new Vector3(spriteRenderer.transform.position.x, spriteRenderer.transform.position.y, -10), Time.deltaTime);
+            Camera.main.transform.position = Vector3.Lerp(
+                Camera.main.transform.position,
+                new Vector3(spriteRenderer.transform.position.x,
+                spriteRenderer.transform.position.y, -10),
+                isSprinting ? Time.deltaTime * 2 : Time.deltaTime);
         }
     }
 
@@ -147,6 +193,9 @@ public class MovementHandler : NetworkBehaviour
         {
             if (hitCollider.CompareTag("Food"))
             {
+                // Pop sound
+                hitCollider.gameObject.GetComponent<AudioSource>().PlayOneShot(hitCollider.gameObject.GetComponent<AudioSource>().clip, 1.0f);
+
                 // Move food to new location
                 hitCollider.transform.position = Utils.GetRandomSpawnPosition();
 
@@ -162,14 +211,13 @@ public class MovementHandler : NetworkBehaviour
 
     void OnCollectFood(ushort growSize)
     {
-        NetSize += growSize;
+        player.NetFoodEaten++;
 
-        GetComponent<NetworkPlayer>().NetFoodEaten++;
-
-        if (GetComponent<NetworkPlayer>().NetFoodEaten < 100)
+        if (player.NetFoodEaten < 100)
         {
+            NetSize += growSize;
             UpdateSize();
-            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Camera.main.orthographicSize + 7, Time.deltaTime);
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Camera.main.orthographicSize + 9, Time.deltaTime);
         }
     }
 

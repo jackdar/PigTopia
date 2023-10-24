@@ -61,7 +61,7 @@ public class InGameUIHandler : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField]
-    Camera mainCamera;
+    public Camera mainCamera;
 
     public NetworkPlayerListHandler playerListHandler;
 
@@ -171,14 +171,16 @@ public class InGameUIHandler : MonoBehaviour
         Invoke("ClearGameText", time);
     }
 
-    public void SetHealth(ushort health, ushort maxHealth)
+    public void SetHealth(float health, float maxHealth)
     {
-        // TODO
+        healthBar.GetComponentInChildren<Slider>().maxValue = maxHealth;
+        healthBar.GetComponentInChildren<Slider>().value = health;
     }
 
-    public void SetStamina(ushort stamina, ushort maxStamina)
+    public void SetStamina(float stamina, float maxStamina)
     {
-        // TODO
+        staminaBar.GetComponentInChildren<Slider>().maxValue = maxStamina;
+        staminaBar.GetComponentInChildren<Slider>().value = stamina;
     }
 
     public void OnExitGame()
