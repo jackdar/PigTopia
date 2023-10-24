@@ -102,6 +102,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         if (Object.HasInputAuthority)
         {
             Local = this;
+            tag = "LocalPlayer";
             inGameUIHandler.SetJoinButtonState(true);
         }
 

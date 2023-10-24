@@ -123,10 +123,9 @@ public class InGameUIHandler : MonoBehaviour
 
     public void OnRestartGame()
     {
-        if (playerListHandler.Players.Contains(NetworkPlayer.Local))
+        if (GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkPlayer>().HasInputAuthority)
         {
-            playerListHandler.Players.Get(playerListHandler.Players.IndexOf(NetworkPlayer.Local)).ResetPlayer();
-            OnPauseGame();
+            GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkPlayer>().ResetPlayer();
         }
     }
 
@@ -177,12 +176,14 @@ public class InGameUIHandler : MonoBehaviour
 
     public void SetHealth(ushort health, ushort maxHealth)
     {
-        // TODO
+        healthBar.GetComponent<Slider>().maxValue = maxHealth;
+        healthBar.GetComponent<Slider>().value = health;
     }
 
     public void SetStamina(ushort stamina, ushort maxStamina)
     {
-        // TODO
+        staminaBar.GetComponent<Slider>().maxValue = maxStamina;
+        staminaBar.GetComponent<Slider>().value = stamina;
     }
 
     public void OnExitGame()

@@ -11,7 +11,7 @@ public class MovementHandler : NetworkBehaviour
     ushort NetSize { get; set; } // Max 65,535
 
     [Networked(OnChanged = nameof(OnCharacterFlip))]
-    bool NetIsFlipped { get; set; }
+    NetworkBool NetIsFlipped { get; set; }
 
     private CharacterController _controller;
 
