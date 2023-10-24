@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Fusion;
@@ -25,14 +26,13 @@ public class BulletBehaviour : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         // If bullet has not hit continue
-        if (HasHitPlayer() == false)
+        if (HasHit() == false)
         {
             transform.Translate(transform.up * speed * Runner.DeltaTime, Space.World);
            
         }
         else
         {
-            Debug.Log("player was hit");
             Runner.Despawn(Object);
             return;
         }
@@ -51,25 +51,62 @@ public class BulletBehaviour : NetworkBehaviour
     }
     
     // Check if bullet will hit in next tick
-    private bool HasHitPlayer()
+    private bool HasHit()
     {
-        var hitPlayer = Runner.LagCompensation.Raycast(transform.position, transform.forward, speed * Runner.DeltaTime,
-            Object.InputAuthority, out var hit, playerLayer);
-        if (hitPlayer == false)
+        RaycastHit2D hitCollider = Runner.GetPhysicsScene2D().Raycast(transform.position, transform.up, speed * Runner.DeltaTime, playerLayer);
+        PolygonCollider2D tempTree = new PolygonCollider2D();
+        
+        Debug.Log("Projectile Owner: " + Object.InputAuthority);
+        
+        if (hitCollider.collider != null)
         {
-            return false;
+            LayerMask hitLayer = hitCollider.collider.gameObject.layer;
+            if (LayerMask.LayerToName(hitLayer) == "Obstacle")
+            {
+                if (hitCollider.collider.GetType() != tempTree.GetType())
+                {
+                    Debug.Log("Obstacle was hit");
+                    return true; 
+                }
+                
+            }
+
+            
+            if (LayerMask.LayerToName(hitLayer) == "Player")
+            {
+                PlayerRef hitPlayerIA = hitCollider.collider.gameObject.GetComponent<NetworkObject>().InputAuthority;
+                PlayerRef currentPlayerIA = Object.InputAuthority;
+                if(currentPlayerIA == hitPlayerIA)
+                {
+                    Debug.Log("Cannot hurt self");
+                    return false;
+                }
+            
+                Debug.Log("Other Player Hit");
+                return true;
+            
+            
+            }
+
         }
-
-        var playerBehaviour = hit.GameObject.GetComponent<PlayerBehaviour>();
-
-        if (playerBehaviour.IsAlive == false)
-        {
-            return false;
-        }
-
-        playerBehaviour.HitPlayer(Object.InputAuthority);
-
-        return true;
+        
+        // var hitPlayer = Runner.LagCompensation.Raycast(transform.position, transform.up, speed * Runner.DeltaTime,
+        //     Object.InputAuthority, out var hit, playerLayer);
+        // if (hitPlayer == false)
+        // {
+        //     return false;
+        // }
+        //
+        // var playerBehaviour = hit.GameObject.GetComponent<PlayerBehaviour>();
+        //
+        // if (playerBehaviour.IsAlive == false)
+        // {
+        //     return false;
+        // }
+        //
+        // playerBehaviour.HitPlayer(Object.InputAuthority);
+        
+        return false;
 
     }
 }
