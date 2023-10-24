@@ -61,7 +61,7 @@ public class InGameUIHandler : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField]
-    Camera mainCamera;
+    public Camera mainCamera;
 
     public NetworkPlayerListHandler playerListHandler;
 
@@ -69,11 +69,6 @@ public class InGameUIHandler : MonoBehaviour
 
     public Color pigColor = Color.white;
 
-<<<<<<< HEAD
-    private string _nickName = null;
-    
-=======
->>>>>>> multiplayer
     void Start()
     {
         playerListHandler = networkPlayerListHandler.GetComponent<NetworkPlayerListHandler>();
@@ -99,11 +94,6 @@ public class InGameUIHandler : MonoBehaviour
 
         SetGameTextState(true);
 
-<<<<<<< HEAD
-        SetNickName(nameInputField.text);
-        
-=======
->>>>>>> multiplayer
         //Hide the join game canvas
         joinGameCanvas.gameObject.SetActive(false);
     }
@@ -129,16 +119,10 @@ public class InGameUIHandler : MonoBehaviour
 
     public void OnRestartGame()
     {
-<<<<<<< HEAD
-        if (GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkPlayer>().HasInputAuthority)
-        {
-            GameObject.FindGameObjectWithTag("LocalPlayer").GetComponent<NetworkPlayer>().ResetPlayer();
-=======
         if (playerListHandler.Players.Contains(NetworkPlayer.Local))
         {
             playerListHandler.Players.Get(playerListHandler.Players.IndexOf(NetworkPlayer.Local)).ResetPlayer();
             OnPauseGame();
->>>>>>> multiplayer
         }
     }
 
@@ -187,24 +171,16 @@ public class InGameUIHandler : MonoBehaviour
         Invoke("ClearGameText", time);
     }
 
-    public void SetHealth(ushort health, ushort maxHealth)
+    public void SetHealth(float health, float maxHealth)
     {
-<<<<<<< HEAD
-        healthBar.GetComponent<Slider>().maxValue = maxHealth;
-        healthBar.GetComponent<Slider>().value = health;
-=======
-        // TODO
->>>>>>> multiplayer
+        healthBar.GetComponentInChildren<Slider>().maxValue = maxHealth;
+        healthBar.GetComponentInChildren<Slider>().value = health;
     }
 
-    public void SetStamina(ushort stamina, ushort maxStamina)
+    public void SetStamina(float stamina, float maxStamina)
     {
-<<<<<<< HEAD
-        staminaBar.GetComponent<Slider>().maxValue = maxStamina;
-        staminaBar.GetComponent<Slider>().value = stamina;
-=======
-        // TODO
->>>>>>> multiplayer
+        staminaBar.GetComponentInChildren<Slider>().maxValue = maxStamina;
+        staminaBar.GetComponentInChildren<Slider>().value = stamina;
     }
 
     public void OnExitGame()
@@ -241,21 +217,4 @@ public class InGameUIHandler : MonoBehaviour
         }
     }
 
-<<<<<<< HEAD
-    public void SetNickName(string nickName)
-    {
-        _nickName = nickName;
-    }
-    
-    public string GetNickName()
-    {
-        if (string.IsNullOrWhiteSpace(_nickName))
-        {
-            _nickName = "Test Data";
-        }
-
-        return _nickName;
-    }
-=======
->>>>>>> multiplayer
 }
