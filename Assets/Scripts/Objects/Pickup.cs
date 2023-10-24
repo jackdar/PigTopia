@@ -2,9 +2,8 @@
 using System.Collections;
 using Fusion;
 
-public class FoodHandler : MonoBehaviour
+public class Pickup : MonoBehaviour
 {
-
 	NetworkPlayerListHandler playerListHandler;
 
     void Awake()
@@ -21,11 +20,10 @@ public class FoodHandler : MonoBehaviour
 
             if (distance < 1f)
 			{
-                transform.position = Vector3.Lerp(transform.position, np.transform.position, Time.deltaTime * 5f);
-			}
+				if (tag.Equals("Food") || (tag.Equals("HealthPack") && np.NetHealth < np.NetMaxHealth))
+                    transform.position = Vector3.Lerp(transform.position, np.transform.position, Time.deltaTime * 5f);
+            }
 		}
 	}
-
-
 }
 

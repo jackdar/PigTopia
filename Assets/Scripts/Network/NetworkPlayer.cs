@@ -180,7 +180,16 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     void OnFoodEatenChanged()
     {
-        if (NetHealth < NetMaxHealth) NetHealth += 50;
+        if (NetHealth < NetMaxHealth) NetHealth += 0.2f;
+
+        if (NetFoodEaten % 20f == 0f)
+        {
+            NetMaxHealth += 5f;
+            NetHealth += 5f;
+            
+            NetMaxStamina += 5f;
+            NetStamina += 5f;
+        }
 
         if (NetFoodEaten == 100 && Object.HasInputAuthority)
         {

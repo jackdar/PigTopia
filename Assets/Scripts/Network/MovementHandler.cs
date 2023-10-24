@@ -21,13 +21,15 @@ public class MovementHandler : NetworkBehaviour
     private NetworkPlayer player;
 
     private float playerSpeed = 3f;
-    private float playerSprintSpeed = 5f;
+    private float playerSprintSpeed = 4f;
 
     private bool isFacingLeft = true;
     private bool isFacingRight;
     private bool isWalking = false;
     private bool isSprinting = false;
     public bool runSoundPlaying = false;
+
+    [SerializeField] SpriteRenderer gunSpriteRenderer;
 
     // Other components
     SpriteRenderer spriteRenderer;
@@ -76,6 +78,7 @@ public class MovementHandler : NetworkBehaviour
     void OnCharacterFlip()
     {
         spriteRenderer.flipX = !spriteRenderer.flipX;
+        gunSpriteRenderer.flipX = !gunSpriteRenderer.flipX;
     }
 
     private void SprintPressed()
@@ -201,12 +204,27 @@ public class MovementHandler : NetworkBehaviour
 
                 OnCollectFood(25);
             }
+
+            if (hitCollider.CompareTag("HealthPack"))
+            {
+                if (player.NetHealth < player.NetMaxHealth)
+                {
+                    // Pop sound
+                    hitCollider.gameObject.GetComponent<AudioSource>().PlayOneShot(hitCollider.gameObject.GetComponent<AudioSource>().clip, 1.0f);
+
+                    // Move food to new location
+                    hitCollider.transform.position = Utils.GetRandomSpawnPosition();
+
+                    OnCollectHealthPack();
+                }
+            }
         }
     }
 
     void UpdateSize()
     {
         spriteRenderer.transform.localScale = Vector3.one + Vector3.one * 100 * (NetSize / 65535f);
+        gunSpriteRenderer.transform.localScale = Vector3.one + Vector3.one * 100 * (NetSize / 65535f);
     }
 
     void OnCollectFood(ushort growSize)
@@ -221,6 +239,17 @@ public class MovementHandler : NetworkBehaviour
         }
     }
 
+    void OnCollectHealthPack()
+    {
+        if (player.NetHealth < (player.NetMaxHealth - 5f))
+        {
+            player.NetHealth += 5f;
+        }
+        else
+        {
+            player.NetHealth = player.NetMaxHealth;
+        }
+    }
     public static void OnSizeChanged(Changed<MovementHandler> changed)
     {
         changed.Behaviour.UpdateSize();

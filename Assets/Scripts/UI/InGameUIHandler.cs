@@ -175,6 +175,7 @@ public class InGameUIHandler : MonoBehaviour
     {
         healthBar.GetComponentInChildren<Slider>().maxValue = maxHealth;
         healthBar.GetComponentInChildren<Slider>().value = health;
+        healthBar.GetComponentInChildren<TextMeshProUGUI>().text = health + "/" + maxHealth;
     }
 
     public void SetStamina(float stamina, float maxStamina)

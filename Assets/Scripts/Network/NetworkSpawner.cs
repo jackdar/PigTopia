@@ -7,28 +7,40 @@ using UnityEngine;
 
 public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
 {
-    [Header("Food")]
-    [SerializeField]
-    NetworkObject foodPrefab;
-
-    [Header("Player")]
+    [Header("Prefabs")]
     [SerializeField]
     NetworkPlayer playerPrefab;
+    [SerializeField]
+    NetworkObject foodPrefab;
+    [SerializeField]
+    NetworkObject healthPackPrefab;
 
     InputHandler inputHandler;
 
     private bool isFoodSpawned = false;
-    
-    void SpawnFood()
+    private bool isHealthPacksSpawned = false;
+
+    void SpawnNetworkObject(NetworkObject prefab, int amount, bool isSpawned)
     {
-        for (int i = 0; i < 300; i++)
+        for (int i = 0; i < amount; i++)
         {
-            NetworkObject spawnedGameObject = Runner.Spawn(foodPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
+            NetworkObject spawnedGameObject = Runner.Spawn(prefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
             spawnedGameObject.transform.position = Utils.GetRandomSpawnPosition();
         }
 
-        isFoodSpawned = true;
+        isSpawned = true;
     }
+
+    //void SpawnFood()
+    //{
+    //    for (int i = 0; i < 300; i++)
+    //    {
+    //        NetworkObject spawnedGameObject = Runner.Spawn(foodPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
+    //        spawnedGameObject.transform.position = Utils.GetRandomSpawnPosition();
+    //    }
+
+    //    isFoodSpawned = true;
+    //}
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
@@ -40,7 +52,9 @@ public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
             spawnedNetworkPlayer.NetPlayerState = NetworkPlayer.PlayerState.connected;
 
             if (!isFoodSpawned)
-                SpawnFood();
+                SpawnNetworkObject(foodPrefab, 200, isFoodSpawned);
+            if (!isHealthPacksSpawned)
+                SpawnNetworkObject(healthPackPrefab, 15, isHealthPacksSpawned);
         }
     }
 
