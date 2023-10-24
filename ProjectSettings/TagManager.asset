@@ -5,15 +5,18 @@ TagManager:
   serializedVersion: 2
   tags:
   - Food
+  - LocalPlayer
+  - HealthPack
+  - Collidables
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
-  - 
+  - Bullets
+  - Obstacle
   - 
   - 
   - 
