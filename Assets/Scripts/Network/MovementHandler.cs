@@ -29,8 +29,6 @@ public class MovementHandler : NetworkBehaviour
     private bool isSprinting = false;
     public bool runSoundPlaying = false;
 
-    [SerializeField] SpriteRenderer gunSpriteRenderer;
-
     // Other components
     SpriteRenderer spriteRenderer;
     Rigidbody2D rigidbody2D_;
@@ -78,7 +76,6 @@ public class MovementHandler : NetworkBehaviour
     void OnCharacterFlip()
     {
         spriteRenderer.flipX = !spriteRenderer.flipX;
-        gunSpriteRenderer.flipX = !gunSpriteRenderer.flipX;
     }
 
     private void SprintPressed()
@@ -224,7 +221,6 @@ public class MovementHandler : NetworkBehaviour
     void UpdateSize()
     {
         spriteRenderer.transform.localScale = Vector3.one + Vector3.one * 100 * (NetSize / 65535f);
-        gunSpriteRenderer.transform.localScale = Vector3.one + Vector3.one * 100 * (NetSize / 65535f);
     }
 
     void OnCollectFood(ushort growSize)
