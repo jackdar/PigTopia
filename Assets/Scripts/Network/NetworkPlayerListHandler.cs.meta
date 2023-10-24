@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/Network/NetworkPlayerListHandler.cs.meta
+guid: 1ff915a63039b48b488060d73fab079e
+========
+guid: ca7fe6fc6698d44859481525fe04331d
+>>>>>>>> multiplayer:Assets/Scripts/UI/SettingsHandler.cs.meta
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
