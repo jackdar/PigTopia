@@ -44,17 +44,20 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public float NetMaxStamina { get; set; }
 
     public static NetworkPlayer Local { get; set; }
-
+    
+    
     // Other components
     SettingsHandler settingsHandler;
     InGameUIHandler inGameUIHandler;
     MovementHandler movementHandler;
+    // private PlayerNetworkedData playerNetworkedData { get; set; }
 
     void Awake()
     {
         settingsHandler = FindObjectOfType<SettingsHandler>();
         inGameUIHandler = FindObjectOfType<InGameUIHandler>();
         movementHandler = GetComponent<MovementHandler>();
+        // playerNetworkedData = GetComponent<PlayerNetworkedData>();
     }
 
     // Start is called before the first frame update
@@ -212,7 +215,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     void OnHealthChanged()
     {
-        inGameUIHandler.SetHealth(NetHealth, NetMaxHealth);
+        if (Object.HasInputAuthority)
+        {
+            inGameUIHandler.SetHealth(NetHealth, NetMaxHealth);
+        }
+        
     }
 
     // Player stamina OnChanged
@@ -231,6 +238,15 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         inGameUIHandler.SetStamina(NetStamina, NetMaxStamina);
     }
 
+    public void decreaseHealth(float dmg)
+    {
+        if (NetHealth > 0)
+        {
+            this.NetHealth -= dmg;
+        }
+        
+    }
+    
     public void JoinGame(string nickName)
     {
         RPC_JoinGame(nickName);

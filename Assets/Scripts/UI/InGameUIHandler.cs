@@ -100,11 +100,12 @@ public class InGameUIHandler : MonoBehaviour
 
     public void HandleScoreboard()
     {
-        scoreboardText.text = "";
+        scoreboardText.text = "Name     Kills\n";
 
         foreach (NetworkPlayer np in playerListHandler.Players)
         {
-            scoreboardText.text += np.NetNickName + ": " + np.NetFoodEaten + "\n";
+            PlayerNetworkedData currentNetworkedData = np.GetComponent<PlayerNetworkedData>();
+            scoreboardText.text += np.NetNickName + ": " + currentNetworkedData.Score + "\n";
         }
     }
 
