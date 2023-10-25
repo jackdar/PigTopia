@@ -9,7 +9,7 @@ public class FoodHandler : MonoBehaviour
 
     void Awake()
     {
-		playerListHandler = GameObject.FindObjectOfType<NetworkPlayerListHandler>();
+		playerListHandler = FindObjectOfType<NetworkPlayerListHandler>();
     }
 
 	// Update is called once per frame
@@ -19,10 +19,16 @@ public class FoodHandler : MonoBehaviour
 		{
 			float distance = Vector3.Distance(transform.position, np.transform.position);
 
-            if (distance < 1f)
+			if (distance < 1f + (np.GetComponent<MovementHandler>().NetSize / 75))
 			{
+<<<<<<< Updated upstream:Assets/Scripts/Food/FoodHandler.cs
                 transform.position = Vector3.Lerp(transform.position, np.transform.position, Time.deltaTime * 5f);
 			}
+=======
+				if (tag.Equals("Food") || (tag.Equals("HealthPack") && np.NetHealth < np.NetMaxHealth))
+                    transform.position = Vector3.Lerp(transform.position, np.transform.position, Time.deltaTime * 10f);
+            }
+>>>>>>> Stashed changes:Assets/Scripts/Objects/Pickup.cs
 		}
 	}
 

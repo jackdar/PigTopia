@@ -78,10 +78,13 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         Vector3 newPosition = Utils.GetRandomSpawnPosition();
 
         if (Object.HasInputAuthority)
+        {
             inGameUIHandler.SetGameplayUIState(true);
+            Camera.main.orthographicSize = 5;
+        }
 
-        NetMaxHealth = 20f;
-        NetMaxStamina = 20f;
+        NetMaxHealth = 25f;
+        NetMaxStamina = 25f;
 
         NetHealth = NetMaxHealth;
         NetStamina = NetMaxStamina;
@@ -103,6 +106,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         {
             Local = this;
             inGameUIHandler.SetJoinButtonState(true);
+            inGameUIHandler.mainCamera.GetComponent<AudioListener>().enabled = false;
+            GetComponent<AudioListener>().enabled = true;
         }
 
         // Set the Player as player object
@@ -116,7 +121,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         if (player == Object.InputAuthority)
         {
-            inGameUIHandler.mainCamera.GetComponent<AudioListener>().enabled = true;
+            gameObject.GetComponent<InGameUIHandler>().mainCamera.GetComponent<AudioListener>().enabled = true;
             inGameUIHandler.playerListHandler.Players.Remove(this);
             Runner.Despawn(Object);
         }
@@ -179,14 +184,24 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     void OnFoodEatenChanged()
     {
+<<<<<<< Updated upstream
         if (NetHealth < NetMaxHealth) NetHealth += 50;
+=======
+        if (NetHealth < NetMaxHealth) NetHealth += 0.2f;
+
+        if (NetFoodEaten % 20f == 0f)
+        {
+            NetMaxHealth += 5f;
+            NetHealth += 5f;
+
+            NetMaxStamina += 5f;
+            NetStamina += 5f;
+        }
+>>>>>>> Stashed changes
 
         if (NetFoodEaten == 100 && Object.HasInputAuthority)
-        {
             RPC_SendSizeMessage(playerNickNameTM.text);
-        }
 
-        inGameUIHandler.HandleScoreboard();
     }
 
     // Player health OnChanged
@@ -202,7 +217,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     void OnHealthChanged()
     {
+<<<<<<< Updated upstream
         inGameUIHandler.SetHealth(NetHealth, NetMaxHealth);
+=======
+        if (Object.HasInputAuthority)
+            inGameUIHandler.SetHealth(NetHealth, NetMaxHealth);
+>>>>>>> Stashed changes
     }
 
     // Player stamina OnChanged
@@ -218,9 +238,19 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     void OnStaminaChanged()
     {
-        inGameUIHandler.SetStamina(NetStamina, NetMaxStamina);
+        if (Object.HasInputAuthority)
+            inGameUIHandler.SetStamina(NetStamina, NetMaxStamina);
     }
 
+<<<<<<< Updated upstream
+=======
+    public void decreaseHealth(float dmg)
+    {
+        if (NetHealth > 0)
+            NetHealth -= dmg;
+    }
+    
+>>>>>>> Stashed changes
     public void JoinGame(string nickName)
     {
         RPC_JoinGame(nickName);

@@ -8,25 +8,31 @@ public class MovementHandler : NetworkBehaviour
     Vector2 inputDirection = Vector2.zero;
 
     [Networked(OnChanged = nameof(OnSizeChanged))]
-    ushort NetSize { get; set; } // Max 65,535
+    public ushort NetSize { get; set; } // Max 65,535
 
     [Networked(OnChanged = nameof(OnCharacterFlip))]
     NetworkBool NetIsFlipped { get; set; }
 
-    //[Networked(OnChanged = nameof(OnCharacterSprint))]
-    //NetworkBool NetIsSprinting { get; set; }
+    [Networked] NetworkBool NetIsSprinting { get; set; }
 
     private CharacterController _controller;
 
     private NetworkPlayer player;
 
+<<<<<<< Updated upstream
     private float playerSpeed = 3f;
     private float playerSprintSpeed = 5f;
+=======
+    private float playerSpeed = 4f;
+    private float playerSprintSpeed = 6f;
+>>>>>>> Stashed changes
 
     private bool isFacingLeft = true;
     private bool isFacingRight;
     private bool isWalking = false;
+
     private bool isSprinting = false;
+
     public bool runSoundPlaying = false;
 
     // Other components
@@ -80,6 +86,8 @@ public class MovementHandler : NetworkBehaviour
 
     private void SprintPressed()
     {
+        Debug.LogError("Sprint PRessed!");
+
         if (player.NetStamina > 5f)
         {
             isSprinting = true;
@@ -96,18 +104,19 @@ public class MovementHandler : NetworkBehaviour
         if (GetInput(out NetworkInputData networkInputData))
         {
             inputDirection = networkInputData.movementInput;
-            
-            if (isSprinting && player.NetStamina > 0)
-                player.NetStamina -= 50f * Time.deltaTime;
-            if (player.NetStamina == 0)
-                SprintReleased();
-            if (!isSprinting && (player.NetStamina <= player.NetMaxStamina))
-                player.NetStamina += 10f * Time.deltaTime;
-
-            playerInputActions.Player.SprintStart.performed += x => SprintPressed();
-            playerInputActions.Player.SprintFinish.performed += x => SprintReleased();
 
             isWalking = inputDirection != Vector2.zero;
+
+            // Sprinting
+            if (isSprinting && player.NetStamina > 0)
+                player.NetStamina -= 10f * Time.fixedDeltaTime;
+            if (player.NetStamina <= 1)
+                SprintReleased();
+            if (!isSprinting && (player.NetStamina <= player.NetMaxStamina))
+                player.NetStamina += 7f * Time.fixedDeltaTime;
+            
+            playerInputActions.Player.SprintStart.performed += x => SprintPressed();
+            playerInputActions.Player.SprintFinish.performed += x => SprintReleased();
 
             // Animations
             if (isWalking)
@@ -123,7 +132,7 @@ public class MovementHandler : NetworkBehaviour
 
             movementDirection.Normalize();
 
-            float movementSpeed = (NetSize / Mathf.Pow(NetSize, 1.05f)) * (isSprinting ? playerSprintSpeed : playerSpeed);
+            float movementSpeed = (NetSize / Mathf.Pow(NetSize, 1.1f)) * (isSprinting ? playerSprintSpeed : playerSpeed);
 
             rigidbody2D_.velocity = movementDirection * movementSpeed;
 
@@ -184,7 +193,7 @@ public class MovementHandler : NetworkBehaviour
         // Disable own collider so we don't detect player self
         boxCollider2D.enabled = false;
 
-        Collider2D hitCollider = Runner.GetPhysicsScene2D().OverlapCircle(spriteRenderer.transform.position, (spriteRenderer.transform.localScale.x / 2f) * 0.8f);
+        Collider2D hitCollider = Runner.GetPhysicsScene2D().OverlapCircle(spriteRenderer.transform.position, (spriteRenderer.transform.localScale.x / 2f) * 1.2f);
 
         // Enable own collider again so others can hit us
         boxCollider2D.enabled = true;
@@ -194,19 +203,38 @@ public class MovementHandler : NetworkBehaviour
             if (hitCollider.CompareTag("Food"))
             {
                 // Pop sound
-                hitCollider.gameObject.GetComponent<AudioSource>().PlayOneShot(hitCollider.gameObject.GetComponent<AudioSource>().clip, 1.0f);
+                if (Object.HasInputAuthority)
+                    hitCollider.gameObject.GetComponent<AudioSource>().PlayOneShot(hitCollider.gameObject.GetComponent<AudioSource>().clip, 1.0f);
 
                 // Move food to new location
                 hitCollider.transform.position = Utils.GetRandomSpawnPosition();
 
-                OnCollectFood(25);
+                OnCollectFood(1);
             }
+<<<<<<< Updated upstream
+=======
+
+            if (hitCollider.CompareTag("HealthPack"))
+            {
+                if (player.NetHealth < player.NetMaxHealth)
+                {
+                    // Pop sound
+                    if (Object.HasInputAuthority)
+                        hitCollider.gameObject.GetComponent<AudioSource>().PlayOneShot(hitCollider.gameObject.GetComponent<AudioSource>().clip, 1.0f);
+
+                    // Move food to new location
+                    hitCollider.transform.position = Utils.GetRandomSpawnPosition();
+
+                    OnCollectHealthPack();
+                }
+            }
+>>>>>>> Stashed changes
         }
     }
 
     void UpdateSize()
     {
-        spriteRenderer.transform.localScale = Vector3.one + Vector3.one * 100 * (NetSize / 65535f);
+        spriteRenderer.transform.localScale = Vector3.one + Vector3.one * 2500 * (NetSize / 65535f);
     }
 
     void OnCollectFood(ushort growSize)
@@ -217,10 +245,22 @@ public class MovementHandler : NetworkBehaviour
         {
             NetSize += growSize;
             UpdateSize();
-            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Camera.main.orthographicSize + 9, Time.deltaTime);
+            if (Object.HasInputAuthority)
+                Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Camera.main.orthographicSize + 20, Time.deltaTime);
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    void OnCollectHealthPack()
+    {
+        if (player.NetHealth < (player.NetMaxHealth - 5f))
+            player.NetHealth += 5f;
+        else
+            player.NetHealth = player.NetMaxHealth;
+    }
+
+>>>>>>> Stashed changes
     public static void OnSizeChanged(Changed<MovementHandler> changed)
     {
         changed.Behaviour.UpdateSize();
