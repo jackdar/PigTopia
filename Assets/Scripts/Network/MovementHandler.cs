@@ -19,13 +19,8 @@ public class MovementHandler : NetworkBehaviour
 
     private NetworkPlayer player;
 
-<<<<<<< Updated upstream
-    private float playerSpeed = 3f;
-    private float playerSprintSpeed = 5f;
-=======
     private float playerSpeed = 4f;
     private float playerSprintSpeed = 6f;
->>>>>>> Stashed changes
 
     private bool isFacingLeft = true;
     private bool isFacingRight;
@@ -211,8 +206,6 @@ public class MovementHandler : NetworkBehaviour
 
                 OnCollectFood(1);
             }
-<<<<<<< Updated upstream
-=======
 
             if (hitCollider.CompareTag("HealthPack"))
             {
@@ -228,7 +221,6 @@ public class MovementHandler : NetworkBehaviour
                     OnCollectHealthPack();
                 }
             }
->>>>>>> Stashed changes
         }
     }
 
@@ -250,8 +242,6 @@ public class MovementHandler : NetworkBehaviour
         }
     }
 
-<<<<<<< Updated upstream
-=======
     void OnCollectHealthPack()
     {
         if (player.NetHealth < (player.NetMaxHealth - 5f))
@@ -260,7 +250,6 @@ public class MovementHandler : NetworkBehaviour
             player.NetHealth = player.NetMaxHealth;
     }
 
->>>>>>> Stashed changes
     public static void OnSizeChanged(Changed<MovementHandler> changed)
     {
         changed.Behaviour.UpdateSize();
