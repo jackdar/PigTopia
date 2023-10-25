@@ -13,21 +13,20 @@ public class MovementHandler : NetworkBehaviour
     [Networked(OnChanged = nameof(OnCharacterFlip))]
     NetworkBool NetIsFlipped { get; set; }
 
-    [Networked] NetworkBool NetIsSprinting { get; set; }
+    //[Networked(OnChanged = nameof(OnCharacterSprint))]
+    //NetworkBool NetIsSprinting { get; set; }
 
     private CharacterController _controller;
 
     private NetworkPlayer player;
 
-    private float playerSpeed = 4f;
-    private float playerSprintSpeed = 6f;
+    private float playerSpeed = 3f;
+    private float playerSprintSpeed = 4f;
 
     private bool isFacingLeft = true;
     private bool isFacingRight;
     private bool isWalking = false;
-
     private bool isSprinting = false;
-
     public bool runSoundPlaying = false;
 
     // Other components
@@ -81,8 +80,6 @@ public class MovementHandler : NetworkBehaviour
 
     private void SprintPressed()
     {
-        Debug.LogError("Sprint PRessed!");
-
         if (player.NetStamina > 5f)
         {
             isSprinting = true;
@@ -99,19 +96,18 @@ public class MovementHandler : NetworkBehaviour
         if (GetInput(out NetworkInputData networkInputData))
         {
             inputDirection = networkInputData.movementInput;
-
-            isWalking = inputDirection != Vector2.zero;
-
-            // Sprinting
+            
             if (isSprinting && player.NetStamina > 0)
                 player.NetStamina -= 10f * Time.fixedDeltaTime;
-            if (player.NetStamina <= 1)
+            if (player.NetStamina == 0)
                 SprintReleased();
             if (!isSprinting && (player.NetStamina <= player.NetMaxStamina))
                 player.NetStamina += 7f * Time.fixedDeltaTime;
-            
+
             playerInputActions.Player.SprintStart.performed += x => SprintPressed();
             playerInputActions.Player.SprintFinish.performed += x => SprintReleased();
+
+            isWalking = inputDirection != Vector2.zero;
 
             // Animations
             if (isWalking)
@@ -127,7 +123,7 @@ public class MovementHandler : NetworkBehaviour
 
             movementDirection.Normalize();
 
-            float movementSpeed = (NetSize / Mathf.Pow(NetSize, 1.1f)) * (isSprinting ? playerSprintSpeed : playerSpeed);
+            float movementSpeed = (NetSize / Mathf.Pow(NetSize, 1.01f)) * (isSprinting ? playerSprintSpeed : playerSpeed);
 
             rigidbody2D_.velocity = movementDirection * movementSpeed;
 
@@ -188,7 +184,7 @@ public class MovementHandler : NetworkBehaviour
         // Disable own collider so we don't detect player self
         boxCollider2D.enabled = false;
 
-        Collider2D hitCollider = Runner.GetPhysicsScene2D().OverlapCircle(spriteRenderer.transform.position, (spriteRenderer.transform.localScale.x / 2f) * 1.2f);
+        Collider2D hitCollider = Runner.GetPhysicsScene2D().OverlapCircle(spriteRenderer.transform.position, (spriteRenderer.transform.localScale.x / 2f) * 0.8f);
 
         // Enable own collider again so others can hit us
         boxCollider2D.enabled = true;
@@ -198,8 +194,7 @@ public class MovementHandler : NetworkBehaviour
             if (hitCollider.CompareTag("Food"))
             {
                 // Pop sound
-                if (Object.HasInputAuthority)
-                    hitCollider.gameObject.GetComponent<AudioSource>().PlayOneShot(hitCollider.gameObject.GetComponent<AudioSource>().clip, 1.0f);
+                hitCollider.gameObject.GetComponent<AudioSource>().PlayOneShot(hitCollider.gameObject.GetComponent<AudioSource>().clip, 1.0f);
 
                 // Move food to new location
                 hitCollider.transform.position = Utils.GetRandomSpawnPosition();
@@ -212,8 +207,7 @@ public class MovementHandler : NetworkBehaviour
                 if (player.NetHealth < player.NetMaxHealth)
                 {
                     // Pop sound
-                    if (Object.HasInputAuthority)
-                        hitCollider.gameObject.GetComponent<AudioSource>().PlayOneShot(hitCollider.gameObject.GetComponent<AudioSource>().clip, 1.0f);
+                    hitCollider.gameObject.GetComponent<AudioSource>().PlayOneShot(hitCollider.gameObject.GetComponent<AudioSource>().clip, 1.0f);
 
                     // Move food to new location
                     hitCollider.transform.position = Utils.GetRandomSpawnPosition();
@@ -238,7 +232,7 @@ public class MovementHandler : NetworkBehaviour
             NetSize += growSize;
             UpdateSize();
             if (Object.HasInputAuthority)
-                Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Camera.main.orthographicSize + 20, Time.deltaTime);
+                Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, Camera.main.orthographicSize + 9, Time.deltaTime);
         }
     }
 
@@ -249,7 +243,6 @@ public class MovementHandler : NetworkBehaviour
         else
             player.NetHealth = player.NetMaxHealth;
     }
-
     public static void OnSizeChanged(Changed<MovementHandler> changed)
     {
         changed.Behaviour.UpdateSize();

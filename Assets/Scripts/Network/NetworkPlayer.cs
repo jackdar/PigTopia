@@ -44,17 +44,20 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public float NetMaxStamina { get; set; }
 
     public static NetworkPlayer Local { get; set; }
-
+    
+    
     // Other components
     SettingsHandler settingsHandler;
     InGameUIHandler inGameUIHandler;
     MovementHandler movementHandler;
+    // private PlayerNetworkedData playerNetworkedData { get; set; }
 
     void Awake()
     {
         settingsHandler = FindObjectOfType<SettingsHandler>();
         inGameUIHandler = FindObjectOfType<InGameUIHandler>();
         movementHandler = GetComponent<MovementHandler>();
+        // playerNetworkedData = GetComponent<PlayerNetworkedData>();
     }
 
     // Start is called before the first frame update
@@ -78,10 +81,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         Vector3 newPosition = Utils.GetRandomSpawnPosition();
 
         if (Object.HasInputAuthority)
-        {
             inGameUIHandler.SetGameplayUIState(true);
-            Camera.main.orthographicSize = 5;
-        }
 
         NetMaxHealth = 25f;
         NetMaxStamina = 25f;
@@ -105,9 +105,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         if (Object.HasInputAuthority)
         {
             Local = this;
+            tag = "LocalPlayer";
             inGameUIHandler.SetJoinButtonState(true);
             inGameUIHandler.mainCamera.GetComponent<AudioListener>().enabled = false;
-            GetComponent<AudioListener>().enabled = true;
+            gameObject.GetComponent<AudioListener>().enabled = true;
         }
 
         // Set the Player as player object
@@ -121,7 +122,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         if (player == Object.InputAuthority)
         {
-            gameObject.GetComponent<InGameUIHandler>().mainCamera.GetComponent<AudioListener>().enabled = true;
+            inGameUIHandler.mainCamera.GetComponent<AudioListener>().enabled = true;
             inGameUIHandler.playerListHandler.Players.Remove(this);
             Runner.Despawn(Object);
         }
@@ -190,14 +191,17 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         {
             NetMaxHealth += 5f;
             NetHealth += 5f;
-
+            
             NetMaxStamina += 5f;
             NetStamina += 5f;
         }
 
         if (NetFoodEaten == 100 && Object.HasInputAuthority)
+        {
             RPC_SendSizeMessage(playerNickNameTM.text);
+        }
 
+        inGameUIHandler.HandleScoreboard();
     }
 
     // Player health OnChanged
@@ -237,7 +241,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public void decreaseHealth(float dmg)
     {
         if (NetHealth > 0)
-            NetHealth -= dmg;
+        {
+            this.NetHealth -= dmg;
+        }
+        
     }
     
     public void JoinGame(string nickName)

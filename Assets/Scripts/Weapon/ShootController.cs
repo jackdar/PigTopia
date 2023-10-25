@@ -19,7 +19,8 @@ public class ShootController : NetworkBehaviour
     [Networked] private NetworkButtons _buttonsPrevious { get; set; }
     [Networked] private TickTimer ShootCooldown { get; set; }
 
-    [SerializeField] AudioSource audioSource;
+    [SerializeField]
+    AudioSource audioSource;
 
     public override void Spawned()
     {
@@ -49,7 +50,7 @@ public class ShootController : NetworkBehaviour
     {
         // if (input.Buttons.WasPressed(_buttonsPrevious, PlayerButtons.Fire))
         // {
-        SpawnBullet();
+            SpawnBullet();
         // }
 
         // _buttonsPrevious = input.Buttons;
@@ -60,10 +61,17 @@ public class ShootController : NetworkBehaviour
         if (ShootCooldown.ExpiredOrNotRunning(Runner) == false) return;
 
         var position = gunShotPoint.position;
-        NetworkObject bullet = Runner.Spawn(bulletPrefab, new Vector3(position.x, position.y, 0f), gunShotPoint.rotation, Object.InputAuthority);
-        bullet.GetComponent<BulletBehaviour>().RPC_PlayShootSound(bullet);
+        Runner.Spawn(bulletPrefab, new Vector3(position.x, position.y, 0f), gunShotPoint.rotation, Object.InputAuthority);
+        RPC_PlayShootSound(Object.GetComponent<NetworkPlayer>());
         
         ShootCooldown = TickTimer.CreateFromSeconds(Runner, cooldown);
         
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_PlayShootSound(NetworkPlayer player, RpcInfo info = default)
+    {
+        Utils.DebugLog($"Shoot sound playing!");
+        audioSource.PlayOneShot(audioSource.clip);
     }
 }

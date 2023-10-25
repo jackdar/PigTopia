@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/UI.meta
 guid: 169879f18d0754226a745128f676ffc5
+========
+guid: e579ce2857ddf4362911e0310d95cb5c
+>>>>>>>> multiplayer:Assets/_Assets/Audio.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

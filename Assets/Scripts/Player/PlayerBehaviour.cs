@@ -32,7 +32,7 @@ public class PlayerBehaviour : NetworkBehaviour
         if (Object == null) return;
         if (Object.HasStateAuthority == false) return;
         if (wasHit) return;
-
+        
         // If hit was triggered by a projectile, player who shot gets points
         // Player object is retrieved via the Runner
         if (Runner.TryGetPlayerObject(player, out var playerNetworkObject) && networkPlayer.NetHealth <= 0f)

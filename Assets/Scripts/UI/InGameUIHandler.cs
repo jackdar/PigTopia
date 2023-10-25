@@ -100,11 +100,12 @@ public class InGameUIHandler : MonoBehaviour
 
     public void HandleScoreboard()
     {
-        scoreboardText.text = "";
+        scoreboardText.text = "Name     Kills\n";
 
         foreach (NetworkPlayer np in playerListHandler.Players)
         {
-            scoreboardText.text += np.NetNickName + ": " + np.NetFoodEaten + "\n";
+            PlayerNetworkedData currentNetworkedData = np.GetComponent<PlayerNetworkedData>();
+            scoreboardText.text += np.NetNickName + ": " + currentNetworkedData.Score + "\n";
         }
     }
 
@@ -175,6 +176,7 @@ public class InGameUIHandler : MonoBehaviour
     {
         healthBar.GetComponentInChildren<Slider>().maxValue = maxHealth;
         healthBar.GetComponentInChildren<Slider>().value = health;
+        healthBar.GetComponentInChildren<TextMeshProUGUI>().text = health + "/" + maxHealth;
     }
 
     public void SetStamina(float stamina, float maxStamina)

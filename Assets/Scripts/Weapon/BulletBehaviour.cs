@@ -114,12 +114,4 @@ public class BulletBehaviour : NetworkBehaviour
         return false;
 
     }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_PlayShootSound(NetworkObject bullet, RpcInfo info = default)
-    {
-        Utils.DebugLog($"[RPC] RPC_PlayShootSound");
-
-        bullet.GetComponent<AudioSource>().PlayOneShot(bullet.GetComponent<AudioSource>().clip);
-    }
 }

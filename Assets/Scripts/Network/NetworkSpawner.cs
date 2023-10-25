@@ -20,32 +20,27 @@ public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
     private bool isFoodSpawned = false;
     private bool isHealthPacksSpawned = false;
 
-    private List<NetworkObject> foodObjects = new();
-    private List<NetworkObject> healthPackObjects = new();
-
-    void SpawnFood(int amount)
-    {
-        for (int i = 0; i < 300; i++)
-        {
-            NetworkObject spawnedGameObject = Runner.Spawn(foodPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
-            spawnedGameObject.transform.position = Utils.GetRandomSpawnPosition();
-            foodObjects.Add(spawnedGameObject);
-        }
-
-        isFoodSpawned = true;
-    }
-
-    void SpawnHealthPacks(int amount)
+    void SpawnNetworkObject(NetworkObject prefab, int amount, bool isSpawned)
     {
         for (int i = 0; i < amount; i++)
         {
-            NetworkObject spawnedGameObject = Runner.Spawn(healthPackPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
+            NetworkObject spawnedGameObject = Runner.Spawn(prefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
             spawnedGameObject.transform.position = Utils.GetRandomSpawnPosition();
-            healthPackObjects.Add(spawnedGameObject);
         }
 
-        isHealthPacksSpawned = true;
+        isSpawned = true;
     }
+
+    //void SpawnFood()
+    //{
+    //    for (int i = 0; i < 300; i++)
+    //    {
+    //        NetworkObject spawnedGameObject = Runner.Spawn(foodPrefab, Utils.GetRandomSpawnPosition(), Quaternion.identity);
+    //        spawnedGameObject.transform.position = Utils.GetRandomSpawnPosition();
+    //    }
+
+    //    isFoodSpawned = true;
+    //}
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
@@ -57,14 +52,9 @@ public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
             spawnedNetworkPlayer.NetPlayerState = NetworkPlayer.PlayerState.connected;
 
             if (!isFoodSpawned)
-                SpawnFood(200);
-            else
-                SpawnFood(25);
-
+                SpawnNetworkObject(foodPrefab, 200, isFoodSpawned);
             if (!isHealthPacksSpawned)
-                SpawnHealthPacks(15);
-            else
-                SpawnHealthPacks(2);
+                SpawnNetworkObject(healthPackPrefab, 15, isHealthPacksSpawned);
         }
     }
 
@@ -83,20 +73,6 @@ public class NetworkSpawner : SimulationBehaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Utils.DebugLog("OnPlayerLeft");
-
-        // Remove extra food
-        for (int i = foodObjects.Count; i > foodObjects.Count - 25; i--)
-        {
-            runner.Despawn(foodObjects[i]);
-            foodObjects.RemoveAt(i);
-        }
-
-        // Remove extra health packs
-        for (int i = healthPackObjects.Count; i > healthPackObjects.Count - 25; i--)
-        {
-            runner.Despawn(healthPackObjects[i]);
-            healthPackObjects.RemoveAt(i);
-        }
     }
 
     public void OnConnectedToServer(NetworkRunner runner) { Utils.DebugLog("OnConnectedToServer"); }
